@@ -1,48 +1,162 @@
-"use client"
+"use client";
 
+import {
+  ArrowRight,
+  Check,
+  ChevronDown,
+  ChevronRight,
+  Clock3,
+  FolderKanban,
+  LayoutDashboard,
+  ListTodo,
+  Menu,
+  Sparkles,
+  Target,
+  X,
+} from "lucide-react";
 import { useState } from "react";
-import { authClient } from "../lib/auth-client"
-import { LoginForm, RegisterForm } from "../components/auth-forms";
+import { useRouter } from "next/navigation";
+import { authClient } from "../lib/auth-client";
+import PropellerIcon from "../components/propeller-icon";
+import ProductPreview from "../components/landing/product-preview";
+import LandingNav from "../components/landing/landing-nav";
 
-export default function Home() {
+export default function HomePage() {
+  const router = useRouter();
 
-  const { data: session, isPending: isLoading } = authClient.useSession();
-  const [activeForm, setActiveForm] = useState<"login" | "register">("login");
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-full">Loading...</div>
-    )
-  }
+  const { data: session, isPending } = authClient.useSession();
 
-  if (session) {
-    return (
-      <div className="container mx-auto p-4 py-8">
-        <div className="max-w-md mx-auto text-center">
-          <h1 className="text-2xl font-bold">Welcome, {session.user.name}!</h1>
-          <p className="text-gray-600">You are successfully logged in.</p>
-          <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => authClient.signOut()}>
-            Logout
-          </button>
-        </div>
-      </div>
-    )
-  }
+  const handleStart = () => {
+    router.push(session ? "/dashboard" : "/login");
+  };
+
+
+
   return (
-    <div className="container mx-auto p-4 py-8">
-      <div className="flex justify-center mb-8">
-        <div className="">
-          <button onClick={() => setActiveForm("login")}
-            className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2 ${activeForm === "login" ? "bg-blue-700" : ""}`}>
-            Sign In
-          </button>
-          <button onClick={() => setActiveForm("register")}
-            className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2 ${activeForm === "register" ? "bg-blue-700" : ""}`}>
-            Sign Up
-          </button>
+    <main className="min-h-screen overflow-x-hidden bg-[#080d1a] text-white">
+      {/* NAVBAR */}
+      <LandingNav 
+      session={session} 
+      isPending={isPending} 
+      router={router} 
+      onStart={handleStart}
+      />
+
+      {/* HERO */}
+      <section
+        id="inicio"
+        className="relative overflow-hidden px-5 pb-0 pt-40 sm:px-8 sm:pt-44 lg:px-10 lg:pt-48"
+      >
+        <div className="pointer-events-none absolute left-1/2 top-20 h-125 w-175 -translate-x-1/2 rounded-full bg-blue-600/10 blur-[120px]" />
+
+        <div className="relative mx-auto max-w-5xl text-center">
+          <div className="mx-auto mb-7 flex w-fit items-center gap-2 rounded-full border border-blue-400/20 bg-blue-500/5 px-3.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-300 sm:text-xs">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-blue-400" />
+
+            Seu espaço para fazer acontecer
+          </div>
+
+          <h1 className="mx-auto max-w-4xl text-[clamp(2.8rem,8vw,6.8rem)] font-medium leading-[0.93] tracking-[-0.055em] text-white">
+            Organize o trabalho.
+            <br />
+            <span className="text-slate-400">
+              Mova seus planos.
+            </span>
+          </h1>
+
+          <p className="mx-auto mt-7 max-w-2xl text-sm leading-6 text-slate-400 sm:text-base sm:leading-7 lg:text-lg">
+            O Propeller reúne projetos, tarefas, rotina e tudo que
+            você precisa para transformar ideias em progresso real —
+            sem complicar o seu dia.
+          </p>
+
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <button
+              type="button"
+              onClick={handleStart}
+              disabled={isPending}
+              className="group flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-500 disabled:opacity-60 sm:w-auto"
+            >
+              {session
+                ? "Abrir dashboard"
+                : "Começar gratuitamente"}
+
+              <ArrowRight
+                size={16}
+                className="transition-transform group-hover:translate-x-0.5"
+              />
+            </button>
+
+          </div>
         </div>
-      </div>
-      {activeForm === "login" ? <LoginForm /> : <RegisterForm />}
-    </div>
-  )
+
+        {/* Hero features */}
+        <div className="relative mx-auto mt-20 grid max-w-4xl grid-cols-1 divide-y divide-white/10 border-y border-white/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+          {[
+            {
+              icon: Target,
+              title: "Clareza",
+              text: "Saiba o que importa agora.",
+            },
+            {
+              icon: FolderKanban,
+              title: "Organização",
+              text: "Tudo no lugar certo.",
+            },
+            {
+              icon: Sparkles,
+              title: "Progresso",
+              text: "Veja suas ideias avançarem.",
+            },
+          ].map(({ icon: Icon, title, text }) => (
+            <div
+              key={title}
+              className="flex items-center justify-center gap-3 px-5 py-5 sm:flex-col sm:py-7"
+            >
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-blue-400">
+                <Icon size={16} />
+              </div>
+
+              <div className="text-left sm:text-center">
+                <p className="text-xs font-medium text-slate-200">
+                  {title}
+                </p>
+
+                <p className="mt-1 text-[11px] text-slate-500">
+                  {text}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <ProductPreview />
+
+      </section>
+
+      {/* FOOTER */}
+      <footer className="border-t border-white/10 bg-[#080d1a] px-5 py-8 sm:px-8 lg:px-10">
+        <div className="mx-auto flex max-w-7xl flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-600 text-white">
+              <PropellerIcon size={14} />
+            </div>
+
+            <span className="text-xs font-semibold text-slate-300">
+              Propeller
+            </span>
+          </div>
+
+          <p className="text-[11px] text-slate-600">
+            Organize. Mova. Faça acontecer.
+          </p>
+
+          <p className="text-[11px] text-slate-700">
+            © 2026 Propeller
+          </p>
+        </div>
+      </footer>
+    </main>
+  );
 }

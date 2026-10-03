@@ -11,7 +11,7 @@ export async function middleware(request: NextRequest) {
 
         if (!sessionCookie) {
             // If the user is not authenticated, redirect them to the login page, not now cuz i need to implement the login page, but later i will do it
-            const loginUrl = new URL("/", request.url);
+            const loginUrl = new URL("/login", request.url);
             return Response.redirect(loginUrl.toString());
         }
     }
