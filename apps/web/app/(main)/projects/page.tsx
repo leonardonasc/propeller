@@ -6,7 +6,7 @@ export default async function ProjectsPage() {
   const projects = await getProjects()
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <main className="bg-background text-foreground">
       <div className="py-8">
         <header className="mb-8 flex items-end justify-between gap-6">
           <div>

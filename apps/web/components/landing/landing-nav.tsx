@@ -3,7 +3,7 @@ import PropellerIcon from "../propeller-icon";
 import { ArrowRight, ChevronRight, Menu, X } from "lucide-react";
 
 const navigation = [
-    { label: "História", href: "#historia" },
+    { label: "História", href: "/historia" },
     { label: "Como funciona", href: "#como-funciona" },
     { label: "Recursos", href: "#recursos" },
     { label: "Preços", href: "#precos" },
@@ -24,7 +24,7 @@ export default function LandingNav({ session, isPending, router, onStart }: Land
     };
 
     return (
-        <header className="fixed inset-x-0 top-0 z-50">
+        <header className="absolute top-0 z-50 w-full bg-transparent">
             <div className="mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
                 <nav className="flex h-14 items-center justify-between rounded-2xl border border-white/10 bg-[#080d1a]/80 px-3 shadow-lg shadow-black/10 backdrop-blur-xl sm:px-4">
                     <a

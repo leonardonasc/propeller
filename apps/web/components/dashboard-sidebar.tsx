@@ -4,6 +4,7 @@ import {
   CalendarDays,
   ChevronDown,
   ChevronRight,
+  Crosshair,
   FolderKanban,
   LayoutDashboard,
   LogOut,
@@ -14,7 +15,7 @@ import {
 } from "lucide-react";
 
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 import { authClient } from "../lib/auth-client";
@@ -49,15 +50,11 @@ export function DashboardSidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [userName, setUserName] = useState("Meu perfil");
 
   const { data: session } = authClient.useSession();
-
-  useEffect(() => {
-    if (session?.user?.name) {
-      setUserName(session.user.name);
-    }
-  }, [session]);
+  const userName = session?.user.name ?? "Meu perfil";
+  const userPlan = session?.user.plan ?? "free";
+  const isAdmin = session?.user.role === "admin";
 
   const handleLogout = async () => {
     if (isLoggingOut) return;
@@ -199,6 +196,22 @@ export function DashboardSidebar() {
           </div>
         </nav>
 
+        <nav>
+          <p className="mb-2 mt-6 px-3 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-600">
+            Outros
+          </p>
+          <div className="space-y-1">
+            <button
+              type="button"
+              onClick={() => handleNavigation("/roadmap")}
+              className="group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-[13px] text-slate-400 transition hover:bg-slate-800/60 hover:text-slate-200"
+            >
+              <Crosshair size={16} className="text-slate-500 transition group-hover:text-slate-300" />
+              Roadmap
+            </button>
+          </div>
+        </nav>
+
         {/* Bottom */}
         <div className="mt-auto">
           {/* Plan */}
@@ -209,7 +222,7 @@ export function DashboardSidebar() {
 
             <div>
               <strong className="block text-[11px] font-semibold text-slate-200">
-                Plano gratuito
+                Plano {userPlan === "premium" ? "Premium" : "Free"}
               </strong>
 
               <span className="mt-0.5 block text-[10px] text-slate-500">
@@ -236,7 +249,7 @@ export function DashboardSidebar() {
                 </strong>
 
                 <small className="mt-0.5 block truncate text-[12px] text-slate-500">
-                  Plano gratuito
+                  {isAdmin ? "Administrador" : "Membro"} · {userPlan === "premium" ? "Premium" : "Free"}
                 </small>
               </span>
 

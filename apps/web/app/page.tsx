@@ -17,9 +17,9 @@ import {
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "../lib/auth-client";
-import PropellerIcon from "../components/propeller-icon";
 import ProductPreview from "../components/landing/product-preview";
 import LandingNav from "../components/landing/landing-nav";
+import PublicFooter from "../components/public-footer";
 
 export default function HomePage() {
   const router = useRouter();
@@ -33,11 +33,11 @@ export default function HomePage() {
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#080d1a] text-white">
       {/* NAVBAR */}
-      <LandingNav 
-      session={session} 
-      isPending={isPending} 
-      router={router} 
-      onStart={handleStart}
+      <LandingNav
+        session={session}
+        isPending={isPending}
+        router={router}
+        onStart={handleStart}
       />
 
       {/* HERO */}
@@ -132,28 +132,7 @@ export default function HomePage() {
 
       </section>
 
-      {/* FOOTER */}
-      <footer className="border-t border-white/10 bg-[#080d1a] px-5 py-8 sm:px-8 lg:px-10">
-        <div className="mx-auto flex max-w-7xl flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-600 text-white">
-              <PropellerIcon size={14} />
-            </div>
-
-            <span className="text-xs font-semibold text-slate-300">
-              Propeller
-            </span>
-          </div>
-
-          <p className="text-[11px] text-slate-600">
-            Organize. Mova. Faça acontecer.
-          </p>
-
-          <p className="text-[11px] text-slate-700">
-            © 2026 Propeller
-          </p>
-        </div>
-      </footer>
+      <PublicFooter />
     </main>
   );
 }

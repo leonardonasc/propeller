@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { taskSchema } from './tasks';
 
 export const createProjectSchema = z.object({
   name: z
@@ -23,6 +24,7 @@ export const projectSchema = z.object({
   userId: z.string(),
   name: z.string(),
   description: z.string().nullable(),
+  tasks: z.array(taskSchema).optional(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });

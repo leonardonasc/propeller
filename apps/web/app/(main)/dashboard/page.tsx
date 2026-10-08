@@ -9,24 +9,22 @@ import StatCard from "./_components/stat-card";
 import Activity from "./_components/activity";
 import { getProjects } from "../../src/services/projects";
 import YourProjects from "./_components/your-projects";
+import Link from "next/link";
 
-const tasks = [
-  {
-    title: "Finalizar dashboard",
-    date: "Hoje",
-  },
-  {
-    title: "Revisar documentação",
-    date: "Amanhã",
-  },
-  {
-    title: "Criar página de configurações",
-    date: "03 Out",
-  },
-];
+const dayGreeting = () => {
+  const currentHour = new Date().getHours();
+  if (currentHour < 12) {
+    return "Bom dia";
+  }
+  if (currentHour < 18) {
+    return "Boa tarde";
+  }
+  return "Boa noite";
+}
 
 export default async function DashboardPage() {
   const projects = await getProjects();
+  const tasks = projects.flatMap((project) => project.tasks || []);
 
   return (
     <main className="min-h-screen bg-[#080d1a] text-slate-100">
@@ -40,7 +38,7 @@ export default async function DashboardPage() {
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <div>
               <h1 className="text-2xl font-semibold tracking-tight text-white">
-                Bom dia, Leonardo 👋
+                {dayGreeting()}, Leonardo 👋
               </h1>
 
               <p className="mt-1 text-sm text-slate-400">
@@ -57,119 +55,28 @@ export default async function DashboardPage() {
 
         {/* Stats */}
         <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <StatCard
-            label="Projetos"
-            value={projects.length.toString()}
-            icon={<FolderKanban size={18} />}
-          />
+          <Link href="/projects">
+            <StatCard
+              label="Projetos"
+              value={projects.length.toString()}
+              icon={<FolderKanban size={18} />}
+            />
+          </Link>
           {/* TODO: arrumar as props */}
           <StatCard
             label="Em andamento"
-            value="0"
+            value={tasks.filter((task) => task.status === "in_progress").length.toString()}
             icon={<ListTodo size={18} />}
           />
 
           <StatCard
             label="Concluídos"
-            value="0"
+            value={tasks.filter((task) => task.status === "done").length.toString()}
             icon={<CheckCircle2 size={18} />}
           />
         </section>
 
-        {/* Main content */}
-        <section className="mt-6 grid gap-6 lg:grid-cols-[1.5fr_1fr]">
-          {/* Projects */}
-          <div className="rounded-xl border border-slate-800 bg-[#0d1424]">
-            <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
-              <div>
-                <h2 className="text-sm font-semibold text-white">
-                  Projetos recentes
-                </h2>
 
-                <p className="mt-1 text-xs text-slate-500">
-                  Acompanhe o progresso dos seus projetos.
-                </p>
-              </div>
-
-              <button className="text-xs font-medium text-blue-400 transition hover:text-blue-300">
-                Ver todos
-              </button>
-            </div>
-
-            <YourProjects projects={projects} />
-          </div>
-
-          {/* Activity */}
-          <div className="rounded-xl border border-slate-800 bg-[#0d1424]">
-            <div className="border-b border-slate-800 px-5 py-4">
-              <h2 className="text-sm font-semibold text-white">
-                Atividade recente
-              </h2>
-
-              <p className="mt-1 text-xs text-slate-500">
-                O que aconteceu no workspace.
-              </p>
-            </div>
-
-            <div className="space-y-5 px-5 py-5">
-              <Activity
-                title="Tarefa concluída"
-                description="Finalizar autenticação"
-                time="2h atrás"
-              />
-
-              <Activity
-                title="Projeto atualizado"
-                description="Propeller"
-                time="5h atrás"
-              />
-
-              <Activity
-                title="Novo projeto criado"
-                description="Landing Page"
-                time="Ontem"
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* Tasks */}
-        <section className="mt-6 rounded-xl border border-slate-800 bg-[#0d1424]">
-          <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
-            <div>
-              <h2 className="text-sm font-semibold text-white">
-                Próximas tarefas
-              </h2>
-
-              <p className="mt-1 text-xs text-slate-500">
-                O que precisa da sua atenção.
-              </p>
-            </div>
-
-            <button className="text-xs font-medium text-blue-400 transition hover:text-blue-300">
-              Ver tarefas
-            </button>
-          </div>
-
-          <div className="divide-y divide-slate-800">
-            {tasks.map((task) => (
-              <div
-                key={task.title}
-                className="flex items-center gap-3 px-5 py-4 transition hover:bg-slate-900/40"
-              >
-                <Circle size={16} className="text-slate-600" />
-
-                <span className="flex-1 text-sm text-slate-300">
-                  {task.title}
-                </span>
-
-                <span className="text-xs text-slate-500">
-                  {task.date}
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
       </div>
     </main>
   );
