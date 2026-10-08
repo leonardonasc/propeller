@@ -6,6 +6,8 @@ export const user = pgTable("user", {
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").default(false).notNull(),
+  role: text("role", { enum: ["user", "admin"] }).default("user").notNull(),
+  plan: text("plan", { enum: ["free", "premium"] }).default("free").notNull(),
   image: text("image"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")

@@ -2,8 +2,6 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { and, eq } from 'drizzle-orm';
 
-
-
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { DATABASE_CONNECTION } from '../database/database-connection';
@@ -19,26 +17,30 @@ export class ProjectsService {
   async findAll(userId: string) {
     return this.db.query.projects.findMany({
       where: eq(schema.projects.userId, userId),
+      with: { 
+        tasks: true,
+      },
     });
   }
 
   async findOne(userId: string, id: string) {
-    const [project] = await this.db
-      .select()
-      .from(schema.projects)
-      .where(
-        and(
-          eq(schema.projects.id, id),
-          eq(schema.projects.userId, userId),
-        ),
-      );
+  const project = await this.db.query.projects.findFirst({
+    where: and(
+      eq(schema.projects.id, id),
+      eq(schema.projects.userId, userId),
+    ),
 
-    if (!project) {
-      throw new NotFoundException('Projeto não encontrado');
-    }
+    with: {
+      tasks: true,
+    },
+  })
 
-    return project;
+  if (!project) {
+    throw new NotFoundException("Projeto não encontrado")
   }
+
+  return project
+}
 
   async create(userId: string, dto: CreateProjectDto) {
     const [project] = await this.db

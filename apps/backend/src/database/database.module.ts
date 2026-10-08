@@ -4,6 +4,8 @@ import { DATABASE_CONNECTION } from "./database-connection";
 import { Pool } from "pg";
 import * as authSchema from "./schema/auth";
 import * as projectsSchema from "./schema/projects";
+import * as roadmapSchema from "./schema/roadmap";
+import * as tasksSchema from "./schema/tasks";
 import { drizzle } from "drizzle-orm/node-postgres";
 
 @Module({
@@ -19,6 +21,8 @@ import { drizzle } from "drizzle-orm/node-postgres";
                     schema: {
                         ...authSchema,
                         ...projectsSchema,
+                        ...roadmapSchema,
+                        ...tasksSchema,
                     }
                 });
             },
