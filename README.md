@@ -1,159 +1,169 @@
-# Turborepo starter
+# Propeller
 
-This Turborepo starter is maintained by the Turborepo core team.
+Propeller é uma plataforma de produtividade para organizar projetos e acompanhar tarefas em um só lugar.
 
-## Using this example
+O projeto está sendo desenvolvido como um monorepo com Turborepo, separando a aplicação web da API.
 
-Run the following command:
+## Tecnologias
 
-```sh
-npx create-turbo@latest
+- [Next.js 16](https://nextjs.org/)
+- [React 19](https://react.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [NestJS](https://nestjs.com/)
+- [Drizzle ORM](https://orm.drizzle.team/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Better Auth](https://www.better-auth.com/)
+- [Turborepo](https://turbo.build/repo)
+- [Bun](https://bun.sh/)
+
+## Funcionalidades
+
+- Cadastro, login e gerenciamento de sessão
+- Dashboard autenticado
+- Criação e listagem de projetos
+- Visualização de detalhes de um projeto
+- Visão geral, quadro e lista de tarefas por projeto
+- API REST para gerenciamento de projetos
+- Persistência de dados com PostgreSQL e Drizzle ORM
+- Interface responsiva com Next.js e Tailwind CSS
+
+## Roadmap mvp
+- Autenticação (Registro, Login) ✅
+- Interfaces + responsividade (70%) 
+- Criar projetos
+- Criar tasks
+
+## Estrutura do projeto
+
+```text
+.
+├── apps/
+│   ├── backend/
+│   │   ├── src/
+│   │   │   ├── auth/
+│   │   │   ├── database/
+│   │   │   │   └── schema/
+│   │   │   ├── projects/
+│   │   │   ├── users/
+│   │   │   ├── app.module.ts
+│   │   │   └── main.ts
+│   │   └── drizzle/
+│   │
+│   └── web/
+│       ├── app/
+│       │   ├── (main)/
+│       │   │   ├── dashboard/
+│       │   │   └── projects/
+│       │   ├── login/
+│       │   ├── src/
+│       │   │   ├── schemas/
+│       │   │   └── services/
+│       │   ├── globals.css
+│       │   └── layout.tsx
+│       ├── components/
+│       └── lib/
+│
+├── packages/
+│   ├── eslint-config/
+│   └── typescript-config/
+│
+├── package.json
+├── turbo.json
+└── README.md
 ```
 
-## What's inside?
+### Aplicações
 
-This Turborepo includes the following packages/apps:
+- `apps/web`: aplicação web construída com Next.js.
+- `apps/backend`: API REST construída com NestJS.
 
-### Apps and Packages
+### Pacotes
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `@next/eslint-plugin-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- `packages/eslint-config`: configurações compartilhadas do ESLint.
+- `packages/typescript-config`: configurações compartilhadas do TypeScript.
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+## Pré-requisitos
 
-### Utilities
+- Node.js 24 ou superior
+- Bun 1.3.12 ou superior
+- PostgreSQL
 
-This Turborepo has some additional tools already setup for you:
+## Instalação
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+Clone o repositório e instale as dependências:
 
-### Build
-
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo build
+```bash
+git clone <url-do-repositorio>
+cd coffee-store
+bun install
 ```
 
-Without global `turbo`, use your package manager:
+## Variáveis de ambiente
 
-```sh
-cd my-turborepo
-npx turbo build
-bun exec turbo build
-bun exec turbo build
+### Backend
+
+Crie `apps/backend/.env`:
+
+```env
+DATABASE_URL=postgresql://usuario:senha@localhost:5432/propeller
+BETTER_AUTH_URL=http://localhost:3000
+BETTER_AUTH_SECRET=seu_secret
+UI_URL=http://localhost:3001
+CORS_ORIGIN=http://localhost:3001
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+### Frontend
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+Crie `apps/web/.env.local`:
 
-```sh
-turbo build --filter=docs
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3000
 ```
 
-Without global `turbo`:
+## Desenvolvimento
 
-```sh
-npx turbo build --filter=docs
-bun exec turbo build --filter=docs
-bun exec turbo build --filter=docs
+Para iniciar o frontend e o backend pelo Turborepo:
+
+```bash
+bun run dev
 ```
 
-### Develop
+A aplicação web estará disponível em [http://localhost:3001](http://localhost:3001) e a API em [http://localhost:3000](http://localhost:3000).
 
-To develop all apps and packages, run the following command:
+Para executar cada aplicação separadamente:
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo dev
+```bash
+bun --cwd apps/web run dev
+bun --cwd apps/backend run dev
 ```
 
-Without global `turbo`, use your package manager:
+## Scripts
 
-```sh
-cd my-turborepo
-npx turbo dev
-bun exec turbo dev
-bun exec turbo dev
+Na raiz do projeto:
+
+```bash
+bun run dev          # inicia as aplicações em desenvolvimento
+bun run build        # gera o build de todas as aplicações
+bun run lint         # executa o lint do monorepo
+bun run check-types  # verifica os tipos TypeScript
+bun run format       # formata arquivos TypeScript e Markdown
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+Scripts disponíveis no backend:
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo dev --filter=web
+```bash
+bun --cwd apps/backend run test
+bun --cwd apps/backend run test:e2e
+bun --cwd apps/backend run test:cov
 ```
 
-Without global `turbo`:
+## Banco de dados
 
-```sh
-npx turbo dev --filter=web
-bun exec turbo dev --filter=web
-bun exec turbo dev --filter=web
-```
+O backend utiliza PostgreSQL com Drizzle ORM. A configuração do schema está em `apps/backend/src/database/schema` e as migrações ficam em `apps/backend/drizzle`.
 
-### Remote Caching
+Defina `DATABASE_URL` antes de iniciar a API.
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+## Status
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-bun exec turbo login
-bun exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-bun exec turbo link
-bun exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+Em desenvolvimento. Autenticação e gerenciamento básico de projetos já estão implementados. Tarefas, calendário, organização de rotina e configurações ainda estão em evolução.
