@@ -1,13 +1,13 @@
-
+import { getProjectById } from "../../../src/services/projects"
+import  ProjectWorkspace  from "./_components/project-workspace"
 
 interface PageProps {
-  params: Promise<{ slug: string }>
+  params: Promise<{ id: string }>
 }
 
 export default async function ProjectOverviewPage({ params }: PageProps) {
-  const { slug } = await params
+  const { id } = await params
+  const project = await getProjectById(id)
 
-  return (
-    <div>slug: {slug}</div>
-  )
+  return <ProjectWorkspace project={project} />
 }

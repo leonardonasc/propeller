@@ -8,6 +8,20 @@
       "when": 1789437390220,
       "tag": "0000_fresh_crusher_hogan",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791319667222,
+      "tag": "0001_far_whizzer",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791330656171,
+      "tag": "0002_fast_mole_man",
+      "breakpoints": true
     }
   ]
 }

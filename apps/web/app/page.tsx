@@ -24,14 +24,11 @@ import LandingNav from "../components/landing/landing-nav";
 export default function HomePage() {
   const router = useRouter();
 
-
   const { data: session, isPending } = authClient.useSession();
 
   const handleStart = () => {
     router.push(session ? "/dashboard" : "/login");
   };
-
-
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#080d1a] text-white">

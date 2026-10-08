@@ -7,24 +7,8 @@ import {
 } from "lucide-react";
 import StatCard from "./_components/stat-card";
 import Activity from "./_components/activity";
-
-const projects = [
-  {
-    name: "Website",
-    description: "Redesign do site institucional",
-    progress: 80,
-  },
-  {
-    name: "Propeller",
-    description: "Aplicação de produtividade",
-    progress: 50,
-  },
-  {
-    name: "Landing Page",
-    description: "Página de lançamento",
-    progress: 30,
-  },
-];
+import { getProjects } from "../../src/services/projects";
+import YourProjects from "./_components/your-projects";
 
 const tasks = [
   {
@@ -41,10 +25,12 @@ const tasks = [
   },
 ];
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const projects = await getProjects();
+
   return (
     <main className="min-h-screen bg-[#080d1a] text-slate-100">
-      <div className="mx-auto max-w-7xl px-6 py-8 lg:px-10">
+      <div>
         {/* Header */}
         <header className="mb-8">
           <p className="mb-1 text-sm font-medium text-blue-400">
@@ -73,19 +59,19 @@ export default function DashboardPage() {
         <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <StatCard
             label="Projetos"
-            value="6"
+            value={projects.length.toString()}
             icon={<FolderKanban size={18} />}
           />
-
+          {/* TODO: arrumar as props */}
           <StatCard
             label="Em andamento"
-            value="3"
+            value="0"
             icon={<ListTodo size={18} />}
           />
 
           <StatCard
             label="Concluídos"
-            value="12"
+            value="0"
             icon={<CheckCircle2 size={18} />}
           />
         </section>
@@ -110,37 +96,7 @@ export default function DashboardPage() {
               </button>
             </div>
 
-            <div className="divide-y divide-slate-800">
-              {projects.map((project) => (
-                <div
-                  key={project.name}
-                  className="px-5 py-4 transition hover:bg-slate-900/40"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <h3 className="text-sm font-medium text-slate-100">
-                        {project.name}
-                      </h3>
-
-                      <p className="mt-1 text-xs text-slate-500">
-                        {project.description}
-                      </p>
-                    </div>
-
-                    <span className="text-xs font-medium text-slate-400">
-                      {project.progress}%
-                    </span>
-                  </div>
-
-                  <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-800">
-                    <div
-                      className="h-full rounded-full bg-blue-600 transition-all"
-                      style={{ width: `${project.progress}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
+            <YourProjects projects={projects} />
           </div>
 
           {/* Activity */}

@@ -2,7 +2,8 @@ import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { DATABASE_CONNECTION } from "./database-connection";
 import { Pool } from "pg";
-import * as authSchema from "../auth/schema";
+import * as authSchema from "./schema/auth";
+import * as projectsSchema from "./schema/projects";
 import { drizzle } from "drizzle-orm/node-postgres";
 
 @Module({
@@ -16,7 +17,8 @@ import { drizzle } from "drizzle-orm/node-postgres";
                 })
                 return drizzle(pool, {
                     schema: {
-                        ...authSchema
+                        ...authSchema,
+                        ...projectsSchema,
                     }
                 });
             },

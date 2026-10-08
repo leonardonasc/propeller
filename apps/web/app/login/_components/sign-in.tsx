@@ -32,8 +32,6 @@ export function LoginForm() {
                 toast.error(error.message || "Não foi possível realizar o login.");
                 return;
             }
-
-            toast.success("Login realizado com sucesso!");
         } catch (error) {
             console.error("Error during sign-in:", error);
             toast.error("Não foi possível realizar o login.");
