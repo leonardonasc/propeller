@@ -11,6 +11,7 @@ import {
   Menu,
   Plus,
   Settings,
+  User,
   X,
 } from "lucide-react";
 
@@ -35,13 +36,28 @@ const navigationItems = [
     label: "Calendário",
     href: "/calendar",
     icon: CalendarDays,
+    disabled: true,
   },
   {
     label: "Configurações",
     href: "/settings",
     icon: Settings,
+    disabled: true,
   },
 ];
+
+const otherMenuItems = [
+  {
+    label: "Meu perfil",
+    href: "/profile",
+    icon: User
+  },
+  {
+    label: "Roadmap",
+    href: "/roadmap",
+    icon: Crosshair
+  }
+]
 
 export function DashboardSidebar() {
   const pathname = usePathname();
@@ -142,13 +158,6 @@ export function DashboardSidebar() {
           </button>
 
           {/* New project */}
-          <button
-            type="button"
-            className="mt-8 flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-3.5 py-2.5 text-[13px] font-semibold text-white shadow-lg shadow-blue-600/15 transition hover:bg-blue-500 hover:shadow-blue-500/20"
-          >
-            <Plus size={16} />
-            Novo projeto
-          </button>
         </div>
 
         {/* Navigation */}
@@ -158,7 +167,7 @@ export function DashboardSidebar() {
           </p>
 
           <div className="space-y-1">
-            {navigationItems.map(({ label, href, icon: Icon }) => {
+            {navigationItems.map(({ label, href, icon: Icon, disabled }) => {
               const isActive = pathname === href;
 
               return (
@@ -166,11 +175,15 @@ export function DashboardSidebar() {
                   type="button"
                   key={href}
                   onClick={() => handleNavigation(href)}
+                  disabled={disabled}
                   className={[
                     "group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-[13px] transition",
                     isActive
                       ? "bg-blue-500/10 font-semibold text-blue-400"
                       : "text-slate-400 hover:bg-slate-800/60 hover:text-slate-200",
+                    disabled
+                      ? "cursor-not-allowed opacity-50"
+                      : "",
                   ].join(" ")}
                 >
                   <Icon
@@ -201,14 +214,17 @@ export function DashboardSidebar() {
             Outros
           </p>
           <div className="space-y-1">
-            <button
-              type="button"
-              onClick={() => handleNavigation("/roadmap")}
-              className="group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-[13px] text-slate-400 transition hover:bg-slate-800/60 hover:text-slate-200"
-            >
-              <Crosshair size={16} className="text-slate-500 transition group-hover:text-slate-300" />
-              Roadmap
-            </button>
+            {otherMenuItems.map(({ label, href, icon: Icon }) => (
+              <button
+                type="button"
+                key={href}
+                onClick={() => handleNavigation(href)}
+                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-[13px] text-slate-400 transition hover:bg-slate-800/60 hover:text-slate-200"
+              >
+                <Icon size={16} className="text-slate-500 transition group-hover:text-slate-300" />
+                <span>{label}</span>
+              </button>
+            ))}
           </div>
         </nav>
 

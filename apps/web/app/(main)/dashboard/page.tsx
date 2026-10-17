@@ -1,15 +1,14 @@
 import {
-  ArrowUpRight,
   CheckCircle2,
-  Circle,
   FolderKanban,
   ListTodo,
 } from "lucide-react";
 import StatCard from "./_components/stat-card";
-import Activity from "./_components/activity";
 import { getProjects } from "../../src/services/projects";
-import YourProjects from "./_components/your-projects";
 import Link from "next/link";
+import ProjectCreateButton from "../projects/project-create-button";
+import { headers } from "next/headers";
+import { getUser } from "../../src/services/users";
 
 const dayGreeting = () => {
   const currentHour = new Date().getHours();
@@ -23,11 +22,17 @@ const dayGreeting = () => {
 }
 
 export default async function DashboardPage() {
+  const header = (await headers()).get("cookie") || "";
+
+  const user = await getUser({
+    cookie: header,
+  });
+
   const projects = await getProjects();
   const tasks = projects.flatMap((project) => project.tasks || []);
 
   return (
-    <main className="min-h-screen bg-[#080d1a] text-slate-100">
+    <main className="bg-[#080d1a] text-slate-100">
       <div>
         {/* Header */}
         <header className="mb-8">
@@ -38,7 +43,7 @@ export default async function DashboardPage() {
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <div>
               <h1 className="text-2xl font-semibold tracking-tight text-white">
-                {dayGreeting()}, Leonardo 👋
+                {dayGreeting()}, {user.name.split(" ")[0]} 👋
               </h1>
 
               <p className="mt-1 text-sm text-slate-400">
@@ -46,10 +51,7 @@ export default async function DashboardPage() {
               </p>
             </div>
 
-            <button className="inline-flex items-center gap-2 self-start rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-500 sm:self-auto">
-              Novo projeto
-              <ArrowUpRight size={15} />
-            </button>
+            <ProjectCreateButton />
           </div>
         </header>
 
@@ -71,7 +73,7 @@ export default async function DashboardPage() {
 
           <StatCard
             label="Concluídos"
-            value={tasks.filter((task) => task.status === "done").length.toString()}
+            value={tasks.filter((task) => task.status === "completed").length.toString()}
             icon={<CheckCircle2 size={18} />}
           />
         </section>

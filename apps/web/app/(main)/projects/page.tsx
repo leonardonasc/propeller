@@ -1,16 +1,21 @@
 import Link from "next/link"
 
 import { getProjects } from "../../src/services/projects"
+import ProjectCreateButton from "./project-create-button"
 
 export default async function ProjectsPage() {
   const projects = await getProjects()
 
   return (
     <main className="bg-background text-foreground">
-      <div className="py-8">
+      <div className="">
         <header className="mb-8 flex items-end justify-between gap-6">
           <div>
-            <h1 className="text-3xl font-semibold tracking-tight">
+            {/* todo: padronizar isso como um componente de titulo da página */}
+            <p className="mb-1 text-sm font-medium text-blue-400">
+              Visão geral
+            </p>
+            <h1 className="text-2xl font-semibold tracking-tight">
               Projetos
             </h1>
 
@@ -20,12 +25,7 @@ export default async function ProjectsPage() {
             </p>
           </div>
 
-          <Link
-            href="/projects/new"
-            className="inline-flex h-10 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-accent"
-          >
-            Novo projeto
-          </Link>
+          <ProjectCreateButton />
         </header>
 
         {projects.length === 0 ? (
@@ -109,12 +109,7 @@ function EmptyProjects() {
         tarefas e acompanhar seu progresso.
       </p>
 
-      <Link
-        href="/projects/new"
-        className="mt-5 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-accent"
-      >
-        Criar primeiro projeto
-      </Link>
+      <ProjectCreateButton />
     </div>
   )
 }

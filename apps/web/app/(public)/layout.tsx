@@ -27,7 +27,7 @@ export default function PublicLayout({
       </header>
 
       <main className="flex-1">
-        <div className="mx-auto w-full max-w-6xl px-6">
+        <div className="mx-auto w-full max-w-7xl sm:px-10 lg:px-0">
           {children}
         </div>
       </main>

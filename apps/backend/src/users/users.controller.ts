@@ -10,9 +10,15 @@ export class UsersController {
     }
 
     // This endpoint is public and does not require authentication
-    @Get('public')
-    @Public()
-    getPublic() {
-        return { message: 'This is a public endpoint' };
+    // @Get('public')
+    // @Public()
+    // getPublic() {
+    //     return { message: 'This is a public endpoint' };
+    // }
+
+    @Get('me')
+    getMe(@Session() session: UserSession) {
+        return session.user;
     }
 }
+

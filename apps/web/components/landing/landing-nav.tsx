@@ -28,7 +28,7 @@ export default function LandingNav({ session, isPending, router, onStart }: Land
             <div className="mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
                 <nav className="flex h-14 items-center justify-between rounded-2xl border border-white/10 bg-[#080d1a]/80 px-3 shadow-lg shadow-black/10 backdrop-blur-xl sm:px-4">
                     <a
-                        href="#inicio"
+                        href="/"
                         className="flex items-center gap-2.5 rounded-lg px-2 py-1.5"
                     >
                         <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white">

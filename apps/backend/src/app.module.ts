@@ -12,6 +12,7 @@ import { DATABASE_CONNECTION } from "./database/database-connection"
 import { UsersModule } from "./users/users.module"
 import { ProjectsModule } from "./projects/projects.module"
 import { RoadmapModule } from "./roadmap/roadmap.module"
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
@@ -64,6 +65,8 @@ import { RoadmapModule } from "./roadmap/roadmap.module"
     ProjectsModule,
 
     RoadmapModule,
+
+    TasksModule,
   ],
 
   controllers: [],

@@ -7,7 +7,7 @@ export default function MainLayout({
     <div className="flex h-dvh overflow-hidden">
       <DashboardSidebar />
 
-      <main className="min-w-0 flex-1 overflow-y-auto bg-background px-0 py-8 text-foreground sm:px-8">
+      <main className="mx-auto w-full px-4 py-8 mt-10 md:mt-0 overflow-y-auto bg-background text-foreground">
         {children}
       </main>
     </div>

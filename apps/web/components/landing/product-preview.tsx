@@ -1,3 +1,4 @@
+
 import {
   Clock3,
   FolderKanban,
@@ -5,8 +6,13 @@ import {
   ListTodo,
 } from "lucide-react";
 import PropellerIcon from "../propeller-icon";
+import { authClient } from "../../lib/auth-client";
 
 export default function ProductPreview() {
+
+  const { data: session, isPending } = authClient.useSession()
+  const userName = session?.user.name || "Usuário"
+
   const previewNavigation = [
     {
       icon: LayoutDashboard,
@@ -44,7 +50,7 @@ export default function ProductPreview() {
           </div>
 
           <div className="mx-auto hidden rounded-md border border-slate-800 bg-[#080d1a] px-20 py-1 text-[10px] text-slate-600 sm:block">
-            app.propeller.so
+            http://localhost:3000
           </div>
 
           <div className="w-10" />
@@ -86,14 +92,15 @@ export default function ProductPreview() {
                 <p className="text-xs text-slate-500">
                   Segunda-feira, 6 de outubro
                 </p>
-
-                <h3 className="mt-1 text-xl font-medium text-white">
-                  Bom dia, Leonardo.
-                </h3>
-              </div>
-
-              <div className="hidden rounded-lg border border-slate-800 px-3 py-2 text-xs text-slate-400 sm:block">
-                + Novo projeto
+                {isPending ? (
+                  <p className="mt-1 text-xl font-medium text-white">
+                    Carregando...
+                  </p>
+                ) : (
+                  <h3 className="mt-1 text-xl font-medium text-white">
+                    Bom dia, {userName} 👋
+                  </h3>
+                )}
               </div>
             </div>
 
