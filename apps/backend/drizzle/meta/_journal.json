@@ -57,6 +57,13 @@
       "when": 1791493432874,
       "tag": "0007_majestic_boom_boom",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1792354508900,
+      "tag": "0008_handy_whiplash",
+      "breakpoints": true
     }
   ]
 }

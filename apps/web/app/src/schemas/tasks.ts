@@ -6,6 +6,7 @@ export const createTaskSchema = z.object({
     description: z.string()
         .max(200, { message: 'A descrição da tarefa deve ter no máximo 200 caracteres' })
         .optional(),
+    position: z.number().int().nonnegative().optional(),
     status: z.enum(['todo', 'in_progress', 'completed'], { message: 'O status da tarefa deve ser "todo", "in_progress" ou "completed"' }),
     priority: z.enum(['low', 'medium', 'high'], { message: 'A prioridade da tarefa deve ser "low", "medium" ou "high"' }),
     dueDate: z.date().optional(),
@@ -18,6 +19,7 @@ export const taskSchema = z.object({
     id: z.string(),
     title: z.string(),
     description: z.string().nullable(),
+    position: z.number(),
     status: z.enum(['todo', 'in_progress', 'completed']),
     priority: z.enum(['low', 'medium', 'high']),
     dueDate: z.coerce.date().nullable(),

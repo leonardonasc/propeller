@@ -34,6 +34,7 @@ import {
     updateProject,
 } from "../../../../src/services/projects-client";
 
+type TaskStatus = Task["status"];
 interface ProjectWorkspaceProps {
     project: Project;
 }
@@ -127,32 +128,126 @@ export default function ProjectWorkspace({
     async function handleDragEnd(event: DragEndEvent) {
         const { active, over } = event;
         setActiveTaskId(null);
-        if (!over) return;
 
-        const activeTask = tasks.find((task) => task.id === String(active.id));
-        const overTask = tasks.find((task) => task.id === String(over.id));
-        const destinationStatus = columns.some((column) => column.id === over.id)
-            ? over.id as typeof columns[number]["id"]
-            : overTask?.status;
+        if (!over || active.id === over.id) return;
 
-        if (!activeTask || !destinationStatus || activeTask.status === destinationStatus) {
-            return;
-        }
-
-        const previousTasks = tasks;
-        setTasks((currentTasks) =>
-            currentTasks.map((task) =>
-                task.id === activeTask.id
-                    ? { ...task, status: destinationStatus }
-                    : task,
-            ),
+        const activeTask = tasks.find(
+            (task) => task.id === String(active.id),
         );
 
+        const overTask = tasks.find(
+            (task) => task.id === String(over.id),
+        );
+
+        if (!activeTask) return;
+
+
+
+        const destinationStatus: TaskStatus | undefined = columns.some(
+            (column) => column.id === over.id,
+        )
+            ? (over.id as TaskStatus)
+            : overTask?.status;
+
+        const previousTasks = tasks;
+
+        // Ordena as tarefas de origem e destino pela posição atual.
+        const sourceTasks = tasks
+            .filter((task) => task.status === activeTask.status)
+            .sort((a, b) => a.position - b.position);
+
+        const destinationTasks =
+            activeTask.status === destinationStatus
+                ? sourceTasks
+                : tasks
+                    .filter((task) => task.status === destinationStatus)
+                    .sort((a, b) => a.position - b.position);
+
+        // Remove a tarefa da coluna de origem.
+        const sourceWithoutActive = sourceTasks.filter(
+            (task) => task.id !== activeTask.id,
+        );
+
+        // Se soltou sobre uma tarefa, insere antes dela.
+        // Se soltou sobre a coluna, adiciona ao final.
+        const overIndex = overTask
+            ? destinationTasks.findIndex(
+                (task) => task.id === overTask.id,
+            )
+            : destinationTasks.length;
+
+        const insertIndex = Math.max(
+            0,
+            overTask
+                ? overIndex
+                : destinationTasks.length,
+        );
+
+        let newSourceTasks = sourceWithoutActive;
+        let newDestinationTasks: Task[];
+
+        if (activeTask.status === destinationStatus) {
+            newDestinationTasks = [...sourceWithoutActive];
+            newDestinationTasks.splice(insertIndex, 0, activeTask);
+            newSourceTasks = newDestinationTasks;
+        } else {
+            newDestinationTasks = [...destinationTasks];
+            newDestinationTasks.splice(insertIndex, 0, activeTask);
+        }
+
+        // Recalcula as posições das tarefas afetadas.
+        const updatedById = new Map<string, Task>();
+
+        newSourceTasks.forEach((task, index) => {
+            updatedById.set(task.id, {
+                ...task,
+                position: index,
+            });
+        });
+
+        if (activeTask.status !== destinationStatus) {
+            newDestinationTasks.forEach((task, index) => {
+                updatedById.set(task.id, {
+                    ...task,
+                    status: destinationStatus as TaskStatus,
+                    position: index,
+                });
+            });
+        }
+
+        const nextTasks = tasks.map(
+            (task) => updatedById.get(task.id) ?? task,
+        );
+
+        // Atualiza a interface imediatamente.
+        setTasks(nextTasks);
+
         try {
-            await updateTask(project.id, activeTask.id, { status: destinationStatus });
+            // Persiste apenas as tarefas que realmente mudaram.
+            const changedTasks = nextTasks.filter((task) => {
+                const previous = previousTasks.find(
+                    (item) => item.id === task.id,
+                );
+
+                return previous && (
+                    previous.status !== task.status ||
+                    previous.position !== task.position
+                );
+            });
+
+            await Promise.all(
+                changedTasks.map((task) =>
+                    updateTask(project.id, task.id, {
+                        status: task.status,
+                        position: task.position,
+                    }),
+                ),
+            );
         } catch {
             setTasks(previousTasks);
-            toast.error("Não foi possível mover a tarefa. Tente novamente.");
+            toast.error(
+                "Não foi possível reordenar as tarefas. Tente novamente.",
+            );
         }
     }
 
@@ -301,9 +396,9 @@ export default function ProjectWorkspace({
                 <div className="grid grid-cols-1 items-start gap-5 md:grid-cols-3">
                     {columns.map((column) => {
                         const Icon = column.icon;
-                        const columnTasks = tasks.filter(
-                            (task) => task.status === column.id,
-                        );
+                        const columnTasks = tasks
+                            .filter((task) => task.status === column.id)
+                            .sort((a, b) => a.position - b.position);
 
                         return <TaskColumn key={column.id} column={column}>
                             {/* Column header */}
