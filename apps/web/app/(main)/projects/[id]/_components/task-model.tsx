@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import DatePicker from "react-datepicker";
 import { LoaderCircle, Trash2, X } from "lucide-react"
 
 export type TaskStatus = "todo" | "in_progress" | "completed"
@@ -9,6 +10,8 @@ export interface TaskFormData {
     title: string
     description: string
     status: TaskStatus
+    priority: "low" | "medium" | "high"
+    dueDate: Date | null
 }
 
 interface TaskModalProps {
@@ -20,14 +23,18 @@ interface TaskModalProps {
         id: string
         title: string
         description?: string | null
+        priority: "low" | "medium" | "high"
         status: TaskStatus
+        dueDate: Date | null
     } | null
 }
 
 const initialForm: TaskFormData = {
     title: "",
     description: "",
+    priority: "low",
     status: "todo",
+    dueDate: new Date(), // Initialize with today
 }
 
 export default function TaskModal({
@@ -50,6 +57,8 @@ export default function TaskModal({
                         title: task.title,
                         description: task.description ?? "",
                         status: task.status,
+                        priority: task.priority,
+                        dueDate: task.dueDate,
                     }
                     : initialForm
             )
@@ -67,6 +76,7 @@ export default function TaskModal({
             ...form,
             title: form.title.trim(),
             description: form.description.trim(),
+            dueDate: form.dueDate,
         })
     }
 
@@ -165,6 +175,42 @@ export default function TaskModal({
                             placeholder="Descreva o que precisa ser feito..."
                             className="w-full resize-none rounded-xl border border-slate-700 bg-[#080d1a] px-4 py-3 text-sm text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                         />
+                    </div>
+
+                    {/* Date Picker */}
+                    <div className="space-y-2 flex flex-col">
+                        <label
+                            htmlFor="task-due-date"
+                            className="text-sm font-medium text-slate-200"
+                        >
+                            Data de entrega (dia/mês/ano)
+                        </label>
+                        <div className="flex">
+                            <DatePicker
+                                id="task-due-date"
+                                selected={form.dueDate}
+                                onChange={(date: Date | null) => {
+                                    setForm((current) => ({
+                                        ...current,
+                                        dueDate: date || new Date(),
+                                    }));
+                                }}
+                                dateFormat="dd/MM/yyyy"
+                                className="w-[90%] rounded-xl border border-slate-700 bg-[#080d1a] px-4 py-3 text-sm text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setForm((current) => ({
+                                        ...current,
+                                        dueDate: null,
+                                    }));
+                                }}
+                                className="text-sm hover:text-blue-400 transition ml-2 self-center"
+                            >
+                                Limpar
+                            </button>
+                        </div>
                     </div>
 
                     <div className="space-y-2">

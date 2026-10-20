@@ -39,9 +39,15 @@ export default function TaskCard({ task, onEdit, isOverlay = false }: TaskCardPr
                 }`}
         >
             <div className="flex items-start justify-between gap-3">
-                <h3 className="text-sm leading-5 font-medium text-slate-200">
-                    {task.title}
-                </h3>
+                <div className="flex flex-col gap-1">
+                    <h3 className="text-sm leading-5 font-medium text-slate-200">
+                        {task.title}
+                    </h3>
+                    {/* <span className="w-fit items-center gap-1 rounded-full bg-slate-800 px-2 py-0.5 text-xs font-medium text-slate-400">
+                        {task.priority}
+                    </span> */}
+                </div>
+                
 
                 <button
                     type="button"
@@ -57,6 +63,13 @@ export default function TaskCard({ task, onEdit, isOverlay = false }: TaskCardPr
             {task.description && (
                 <p className="mt-2 line-clamp-3 text-xs leading-5 text-slate-400">
                     {task.description}
+                </p>
+            )}
+            
+            {task.dueDate && (
+                <p className="mt-2 text-xs leading-5 text-slate-400 border-t border-slate-800 pt-2">
+                    Data de entrega:{" "}
+                    {task.dueDate.toLocaleDateString("pt-BR")}
                 </p>
             )}
         </article>

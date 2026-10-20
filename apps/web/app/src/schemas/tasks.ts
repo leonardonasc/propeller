@@ -9,7 +9,7 @@ export const createTaskSchema = z.object({
     position: z.number().int().nonnegative().optional(),
     status: z.enum(['todo', 'in_progress', 'completed'], { message: 'O status da tarefa deve ser "todo", "in_progress" ou "completed"' }),
     priority: z.enum(['low', 'medium', 'high'], { message: 'A prioridade da tarefa deve ser "low", "medium" ou "high"' }),
-    dueDate: z.date().optional(),
+    dueDate: z.date().optional().nullable().default(new Date()),
     projectId: z.string(),
 });
 

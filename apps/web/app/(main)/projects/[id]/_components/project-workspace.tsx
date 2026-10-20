@@ -9,6 +9,7 @@ import {
     Circle,
     CircleCheck,
     Clock3,
+    Filter,
     Plus,
     Settings,
 } from "lucide-react";
@@ -33,6 +34,7 @@ import {
     deleteProject,
     updateProject,
 } from "../../../../src/services/projects-client";
+import Link from "next/link";
 
 type TaskStatus = Task["status"];
 interface ProjectWorkspaceProps {
@@ -71,10 +73,11 @@ function TaskColumn({ column, children }: TaskColumnProps) {
     return (
         <section
             ref={setNodeRef}
-            className={`min-w-0 rounded-xl border p-3 transition-colors ${isOver
+            className={`flex min-h-0 min-w-0 flex-col rounded-xl border p-3 transition-colors ${isOver
                 ? "border-blue-500/70 bg-blue-500/10"
                 : "border-slate-800/80 bg-[#0b1220]"
                 }`}
+            style={{ maxHeight: "calc(100dvh - 280px)" }}
         >
             {children}
         </section>
@@ -300,8 +303,10 @@ export default function ProjectWorkspace({
             } else {
                 const newTask = await createTask(project.id, {
                     ...data,
-                    priority: "medium",
+                    // todo: get priority
+                    priority: "low",
                     projectId: project.id,
+                    dueDate: data.dueDate || null, // Ensure dueDate is either a Date or null
                 });
                 setTasks((prevTasks) => [...prevTasks, newTask]);
                 toast.success("Tarefa criada com sucesso!");
@@ -336,10 +341,13 @@ export default function ProjectWorkspace({
     return (
         <div className="min-h-full space-y-8 text-slate-100">
             {/* Header */}
-            <header className="flex flex-col justify-between gap-5 sm:flex-row sm:items-start">
+            <header className="flex flex-col justify-between gap-5 sm:flex-row sm:items-start shrink-0">
                 <div className="min-w-0">
                     <p className="mb-2 text-sm text-slate-500">
-                        Projetos <span className="mx-2">/</span> {currentProject.name}
+                        <Link href="/projects" className="hover:underline">
+                            Projetos
+                        </Link>
+                        <span className="mx-2">/</span> {currentProject.name}
                     </p>
 
                     <h1 className="text-2xl font-semibold tracking-tight">
@@ -415,14 +423,20 @@ export default function ProjectWorkspace({
                                     </span>
                                 </div>
 
-                                <button
-                                    type="button"
-                                    onClick={openCreateModal}
-                                    aria-label={`Adicionar tarefa em ${column.title}`}
-                                    className="rounded-md p-1.5 text-slate-500 transition hover:bg-slate-800 hover:text-white"
-                                >
-                                    <Plus size={16} />
-                                </button>
+                                <div className="flex items-center gap-1">
+                                    <button
+                                        type="button">
+                                        <Filter size={25} className="rounded-md p-1.5 text-slate-500 transition hover:bg-slate-800 hover:text-white" />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={openCreateModal}
+                                        aria-label={`Adicionar tarefa em ${column.title}`}
+                                        className="rounded-md p-1.5 text-slate-500 transition hover:bg-slate-800 hover:text-white"
+                                    >
+                                        <Plus size={16} />
+                                    </button>
+                                </div>
                             </div>
 
                             {/* Task cards */}
@@ -430,7 +444,7 @@ export default function ProjectWorkspace({
                                 items={columnTasks.map((task) => task.id)}
                                 strategy={verticalListSortingStrategy}
                             >
-                                <div className="space-y-3">
+                                <div className="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain pr-1">
                                     {columnTasks.length > 0 ? (
                                         columnTasks.map((task) => (
                                             <TaskCard
@@ -452,7 +466,7 @@ export default function ProjectWorkspace({
                             <button
                                 type="button"
                                 onClick={openCreateModal}
-                                className="mt-3 flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-slate-500 transition hover:bg-slate-800/60 hover:text-slate-300"
+                                className="mt-3 flex w-full shrink-0 items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-slate-500 transition hover:bg-slate-800/60 hover:text-slate-300"
                             >
                                 <Plus size={15} />
                                 Adicionar tarefa

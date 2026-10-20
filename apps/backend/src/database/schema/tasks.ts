@@ -27,7 +27,7 @@ export const tasks = pgTable("tasks", {
     enum: ["low", "medium", "high"],
   })
     .notNull()
-    .default("medium"),
+    .default("low"),
   dueDate: timestamp("due_date"),
   createdAt: timestamp("created_at")
     .defaultNow()

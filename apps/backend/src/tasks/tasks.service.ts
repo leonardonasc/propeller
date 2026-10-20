@@ -71,8 +71,8 @@ export class TasksService {
         description: dto.description,
         position,
         status,
-        priority: dto.priority ?? 'medium',
-        dueDate: dto.dueDate ? new Date(dto.dueDate) : undefined,
+        priority: dto.priority ?? 'low',
+        dueDate: dto.dueDate ? new Date(dto.dueDate) : null,
       })
       .returning();
 
@@ -103,8 +103,8 @@ export class TasksService {
       .set({
         ...dto,
         dueDate:
-          dto.dueDate === undefined
-            ? undefined
+          dto.dueDate === null
+            ? null
             : dto.dueDate
               ? new Date(dto.dueDate)
               : null,
