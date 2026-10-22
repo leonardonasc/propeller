@@ -20,6 +20,7 @@ import { authClient } from "../lib/auth-client";
 import ProductPreview from "../components/landing/product-preview";
 import LandingNav from "../components/landing/landing-nav";
 import PublicFooter from "../components/public-footer";
+import { PricingSection } from "../components/landing/pricing-section";
 
 export default function HomePage() {
   const router = useRouter();
@@ -131,6 +132,8 @@ export default function HomePage() {
         <ProductPreview />
 
       </section>
+
+      <PricingSection onStart={handleStart} />
 
       <PublicFooter />
     </main>

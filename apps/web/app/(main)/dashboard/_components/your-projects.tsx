@@ -15,32 +15,32 @@ export default function YourProjects({ projects }: ProjectCardProps) {
     };
 
     return (
-        <div className="divide-y divide-slate-800">
+        <div className="divide-y divide-border">
             {projects.map((project) => (
                 <div
                     key={project.id}
                     onClick={() => handleProjectClick(project.id)}
-                    className="px-5 py-4 transition hover:bg-slate-900/40 hover:cursor-pointer hover:scale-095"
+                    className="px-5 py-4 transition hover:cursor-pointer hover:bg-secondary"
                 >
                     <div className="flex items-start justify-between gap-4">
                         <div>
-                            <h3 className="text-sm font-medium text-slate-100">
+                            <h3 className="text-sm font-medium text-foreground">
                                 {project.name}
                             </h3>
 
-                            <p className="mt-1 text-xs text-slate-500">
+                            <p className="mt-1 text-xs text-muted-foreground">
                                 {project.description}
                             </p>
                         </div>
 
-                        <span className="text-xs font-medium text-slate-400">
+                        <span className="text-xs font-medium text-muted-foreground">
                             {/* {project}% */} 10%
                         </span>
                     </div>
 
-                    <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-800">
+                    <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-secondary">
                         <div
-                            className="h-full rounded-full bg-blue-600 transition-all"
+                            className="h-full rounded-full bg-primary transition-all"
                             // style={{ width: `${project.progress}%` }}
                             style={{ width: 20 }}
                         />

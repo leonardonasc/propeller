@@ -7,14 +7,14 @@ interface StatCardProps {
 
 export default function StatCard({ label, value, icon }: StatCardProps) {
     return (
-        <div className="rounded-xl border border-slate-800 bg-[#0d1424] p-5">
-            <div className="mb-4 flex size-9 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400">
+        <div className="h-full rounded-xl border border-border bg-card p-5 transition-colors hover:border-primary/40">
+            <div className="mb-4 flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
                 {icon}
             </div>
 
-            <p className="text-xs font-medium text-slate-500">{label}</p>
+            <p className="text-xs font-medium text-muted-foreground">{label}</p>
 
-            <p className="mt-1 text-2xl font-semibold tracking-tight text-white">
+            <p className="mt-1 text-3xl font-semibold tracking-tight text-foreground">
                 {value}
             </p>
         </div>

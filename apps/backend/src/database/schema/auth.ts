@@ -1,20 +1,23 @@
-import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp, boolean, index } from "drizzle-orm/pg-core";
+import { relations, sql } from "drizzle-orm";
+import { pgTable, text, timestamp, boolean, index, uniqueIndex } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
+  username: text("username").notNull().default(sql`'user' || nextval('user_username_seq')::text`),
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").default(false).notNull(),
   role: text("role", { enum: ["user", "admin"] }).default("user").notNull(),
   plan: text("plan", { enum: ["free", "premium"] }).default("free").notNull(),
+  isBanned: boolean("is_banned").default(false).notNull(),
+  bannedUntil: timestamp("banned_until"),
   image: text("image"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
-});
+}, (table) => [uniqueIndex("user_username_unique").on(table.username)]);
 
 export const session = pgTable(
   "session",

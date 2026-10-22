@@ -9,7 +9,7 @@ import {
     Circle,
     CircleCheck,
     Clock3,
-    Filter,
+    FolderKanban,
     Plus,
     Settings,
 } from "lucide-react";
@@ -22,6 +22,10 @@ import {
     DragEndEvent,
     DragStartEvent,
     closestCorners,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors,
     useDroppable,
 } from "@dnd-kit/core";
 import {
@@ -34,7 +38,7 @@ import {
     deleteProject,
     updateProject,
 } from "../../../../src/services/projects-client";
-import Link from "next/link";
+import { PageHeader } from "../../../_components/page-header";
 
 type TaskStatus = Task["status"];
 interface ProjectWorkspaceProps {
@@ -46,19 +50,19 @@ const columns = [
         id: "todo",
         title: "A fazer",
         icon: Circle,
-        color: "text-slate-400",
+        color: "text-muted-foreground",
     },
     {
         id: "in_progress",
         title: "Em andamento",
         icon: Clock3,
-        color: "text-blue-400",
+        color: "text-primary",
     },
     {
         id: "completed",
         title: "Concluído",
         icon: CircleCheck,
-        color: "text-emerald-400",
+        color: "text-success",
     },
 ] as const;
 
@@ -73,11 +77,10 @@ function TaskColumn({ column, children }: TaskColumnProps) {
     return (
         <section
             ref={setNodeRef}
-            className={`flex min-h-0 min-w-0 flex-col rounded-xl border p-3 transition-colors ${isOver
-                ? "border-blue-500/70 bg-blue-500/10"
-                : "border-slate-800/80 bg-[#0b1220]"
+            className={`h-[420px] w-[min(85vw,360px)] shrink-0 flex min-h-0 min-w-0 flex-col rounded-xl border p-3 transition-colors md:h-[calc(100dvh-310px)] md:w-auto md:flex-1 ${isOver
+                ? "border-primary/70 bg-primary/10"
+                : "border-border bg-card"
                 }`}
-            style={{ maxHeight: "calc(100dvh - 280px)" }}
         >
             {children}
         </section>
@@ -95,6 +98,11 @@ export default function ProjectWorkspace({
     const [selectedTask, setSelectedTask] = useState<Task | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
+    const [pendingDelete, setPendingDelete] = useState<"task" | "project" | null>(null);
+    const sensors = useSensors(
+        useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+        useSensor(KeyboardSensor),
+    );
     const activeTask = tasks.find((task) => task.id === activeTaskId);
 
     function openCreateModal() {
@@ -279,14 +287,34 @@ export default function ProjectWorkspace({
 
     async function handleDeleteProject() {
         if (!selectedProject) return;
+        setPendingDelete("project");
+    }
 
-        try {
-            await deleteProject(selectedProject.id);
-            toast.success("Projeto excluído com sucesso!");
-            router.push("/projects");
-        } catch {
-            setError("Não foi possível excluir o projeto. Tente novamente.");
-            toast.error("Não foi possível excluir o projeto. Tente novamente.");
+    function confirmDelete() {
+        if (pendingDelete === "project" && selectedProject) {
+        const target = selectedProject;
+        setPendingDelete(null);
+        closeModal();
+        let undone = false;
+        const timer = window.setTimeout(async () => {
+            if (undone) return;
+            try { await deleteProject(target.id); toast.success("Projeto excluído."); router.push("/projects"); }
+            catch { toast.error("Não foi possível excluir o projeto."); }
+        }, 7000);
+        toast("Projeto será excluído em 7 segundos.", { duration: 7000, action: { label: "Desfazer", onClick: () => { undone = true; window.clearTimeout(timer); toast.success("Exclusão cancelada."); } } });
+        }
+        if (pendingDelete === "task" && selectedTask) {
+            const target = selectedTask;
+            setPendingDelete(null);
+            setTasks((items) => items.filter((task) => task.id !== target.id));
+            closeModal();
+            let undone = false;
+            const timer = window.setTimeout(async () => {
+                if (undone) return;
+                try { await deleteTask(project.id, target.id); toast.success("Tarefa excluída."); }
+                catch { setTasks((items) => [...items, target]); toast.error("Não foi possível excluir a tarefa."); }
+            }, 7000);
+            toast("Tarefa será excluída em 7 segundos.", { duration: 7000, action: { label: "Desfazer", onClick: () => { undone = true; window.clearTimeout(timer); setTasks((items) => [...items, target]); toast.success("Exclusão cancelada."); } } });
         }
     }
 
@@ -322,73 +350,51 @@ export default function ProjectWorkspace({
 
     async function handleDelete() {
         if (!selectedTask) return;
-
-        try {
-            await deleteTask(project.id, selectedTask.id);
-            setTasks((prevTasks) =>
-                prevTasks.filter((task) => task.id !== selectedTask.id),
-            );
-            toast.success("Tarefa excluída com sucesso!");
-        } catch {
-            setError("Não foi possível excluir a tarefa. Tente novamente.");
-            toast.error("Não foi possível excluir a tarefa. Tente novamente.");
-        } finally {
-            closeModal();
-        }
+        setPendingDelete("task");
 
     }
 
     return (
-        <div className="min-h-full space-y-8 text-slate-100">
-            {/* Header */}
-            <header className="flex flex-col justify-between gap-5 sm:flex-row sm:items-start shrink-0">
-                <div className="min-w-0">
-                    <p className="mb-2 text-sm text-slate-500">
-                        <Link href="/projects" className="hover:underline">
-                            Projetos
-                        </Link>
-                        <span className="mx-2">/</span> {currentProject.name}
-                    </p>
-
-                    <h1 className="text-2xl font-semibold tracking-tight">
-                        {currentProject.name}
-                    </h1>
-
-                    <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-                        {currentProject.description || "Organize as tarefas deste projeto."}
-                    </p>
-                </div>
-
-                <div className="flex shrink-0 items-center gap-2">
-                    <button
-                        type="button"
-                        onClick={() => openEditProjectModal(currentProject)}
-                        aria-label="Editar projeto"
-                        className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium transition hover:bg-blue-500"
-                    >
-                        <Settings size={16} />
-                    </button>
-                    <button
-                        type="button"
-                        onClick={openCreateModal}
-                        className="inline-flex shrink-0 h-10 items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium transition hover:bg-blue-500"
-                    >
-                        <Plus size={16} />
-                        Nova tarefa
-                    </button>
-                </div>
-            </header>
+        <div className="min-h-0 space-y-6 text-foreground">
+            <PageHeader
+                backHref="/projects"
+                eyebrow="Projeto"
+                icon={FolderKanban}
+                title={currentProject.name}
+                description={currentProject.description || "Organize as tarefas deste projeto."}
+                className="shrink-0"
+                actions={(
+                    <>
+                        <button
+                            type="button"
+                            onClick={() => openEditProjectModal(currentProject)}
+                            aria-label="Editar projeto"
+                            className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-lg border border-border bg-card px-3 text-sm font-medium text-foreground shadow-sm transition hover:border-primary/50 hover:bg-secondary"
+                        >
+                            <Settings size={16} />
+                        </button>
+                        <button
+                            type="button"
+                            onClick={openCreateModal}
+                            className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-md shadow-primary/20 transition hover:-translate-y-0.5 hover:brightness-110"
+                        >
+                            <Plus size={16} />
+                            Nova tarefa
+                        </button>
+                    </>
+                )}
+            />
 
             {/* Summary */}
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-b border-slate-800 pb-5 text-sm">
-                <span className="font-medium text-slate-200">Quadro</span>
-                <span className="text-slate-500">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-b border-border pb-5 text-sm">
+                <span className="font-medium text-foreground">Quadro</span>
+                <span className="text-muted-foreground">
                     {tasks.length} {tasks.length === 1 ? "tarefa" : "tarefas"}
                 </span>
             </div>
 
             {error && (
-                <p role="alert" className="rounded-lg border border-red-400/20 bg-red-400/10 px-4 py-3 text-sm text-red-300">
+                <p role="alert" className="rounded-lg border border-danger/20 bg-danger/10 px-4 py-3 text-sm text-danger">
                     {error}
                 </p>
             )}
@@ -396,12 +402,13 @@ export default function ProjectWorkspace({
             {/* Kanban */}
             <DndContext
                 id="project-workspace-dnd"
+                sensors={sensors}
                 collisionDetection={closestCorners}
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}
                 onDragCancel={() => setActiveTaskId(null)}
             >
-                <div className="grid grid-cols-1 items-start gap-5 md:grid-cols-3">
+                <div className="flex min-w-0 items-stretch gap-5 overflow-x-auto pb-2">
                     {columns.map((column) => {
                         const Icon = column.icon;
                         const columnTasks = tasks
@@ -414,29 +421,22 @@ export default function ProjectWorkspace({
                                 <div className="flex items-center gap-2.5">
                                     <Icon size={17} className={column.color} />
 
-                                    <h2 className="text-sm font-semibold text-slate-200">
+                                    <h2 className="text-sm font-semibold text-card-foreground">
                                         {column.title}
                                     </h2>
 
-                                    <span className="rounded-md bg-slate-800/80 px-2 py-0.5 text-xs text-slate-400">
+                                    <span className="rounded-md bg-secondary px-2 py-0.5 text-xs text-muted-foreground">
                                         {columnTasks.length}
                                     </span>
                                 </div>
-
-                                <div className="flex items-center gap-1">
-                                    <button
-                                        type="button">
-                                        <Filter size={25} className="rounded-md p-1.5 text-slate-500 transition hover:bg-slate-800 hover:text-white" />
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={openCreateModal}
-                                        aria-label={`Adicionar tarefa em ${column.title}`}
-                                        className="rounded-md p-1.5 text-slate-500 transition hover:bg-slate-800 hover:text-white"
-                                    >
-                                        <Plus size={16} />
-                                    </button>
-                                </div>
+                                <button
+                                    type="button"
+                                    onClick={openCreateModal}
+                                    aria-label={`Adicionar tarefa em ${column.title}`}
+                                    className="rounded-lg border border-border p-1.5 text-muted-foreground transition hover:border-primary/50 hover:bg-secondary hover:text-foreground"
+                                >
+                                    <Plus size={16} />
+                                </button>
                             </div>
 
                             {/* Task cards */}
@@ -454,8 +454,8 @@ export default function ProjectWorkspace({
                                             />
                                         ))
                                     ) : (
-                                        <div className="flex min-h-28 flex-col items-center justify-center rounded-lg border border-dashed border-slate-800 px-4 py-6 text-center">
-                                            <p className="text-xs text-slate-500">
+                                        <div className="flex min-h-28 flex-col items-center justify-center rounded-lg border border-dashed border-border px-4 py-6 text-center">
+                                            <p className="text-xs text-muted-foreground">
                                                 Nenhuma tarefa por aqui
                                             </p>
                                         </div>
@@ -466,7 +466,7 @@ export default function ProjectWorkspace({
                             <button
                                 type="button"
                                 onClick={openCreateModal}
-                                className="mt-3 flex w-full shrink-0 items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-slate-500 transition hover:bg-slate-800/60 hover:text-slate-300"
+                                className="mt-3 flex w-full shrink-0 items-center gap-2 rounded-lg border border-dashed border-border px-3 py-2.5 text-sm font-medium text-muted-foreground transition hover:border-primary/60 hover:bg-primary/5 hover:text-primary"
                             >
                                 <Plus size={15} />
                                 Adicionar tarefa
@@ -487,6 +487,7 @@ export default function ProjectWorkspace({
 
             <TaskModal
                 open={activeModal === "task"}
+                projectId={project.id}
                 task={selectedTask}
                 onClose={closeModal}
                 onSubmit={handleSubmitTask}
@@ -500,6 +501,7 @@ export default function ProjectWorkspace({
                 onSubmit={handleSubmitProject}
                 onDelete={handleDeleteProject}
             />
+            {pendingDelete && <div className="fixed inset-0 z-[70] grid place-items-center bg-black/65 p-4 backdrop-blur-sm"><section role="alertdialog" aria-modal="true" className="w-full max-w-md rounded-2xl border border-border bg-card p-6 text-card-foreground shadow-2xl"><h2 className="text-lg font-semibold">Excluir {pendingDelete === "task" ? "tarefa" : "projeto"}?</h2><p className="mt-2 text-sm leading-6 text-muted-foreground">{pendingDelete === "task" ? `A tarefa “${selectedTask?.title}” será removida.` : `O projeto “${selectedProject?.name}” e suas tarefas serão removidos.`} Você terá 7 segundos para desfazer.</p><div className="mt-6 flex justify-end gap-2"><button type="button" onClick={() => setPendingDelete(null)} className="rounded-lg border border-border px-4 py-2.5 text-sm font-medium hover:bg-secondary">Cancelar</button><button type="button" onClick={confirmDelete} className="rounded-lg bg-danger px-4 py-2.5 text-sm font-semibold text-white hover:brightness-110">Excluir</button></div></section></div>}
         </div>
     );
 }

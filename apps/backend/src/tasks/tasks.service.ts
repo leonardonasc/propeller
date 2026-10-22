@@ -1,6 +1,6 @@
 
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { and, desc, eq } from 'drizzle-orm';
+import { BadRequestException, ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { and, eq, sql } from 'drizzle-orm';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { DATABASE_CONNECTION } from '../database/database-connection';
@@ -43,40 +43,92 @@ export class TasksService {
     return task;
   }
 
+  async findComments(userId: string, projectId: string, taskId: string) {
+    await this.ensureTaskOwnership(userId, projectId, taskId);
+    return this.db.query.taskComments.findMany({
+      where: eq(schema.taskComments.taskId, taskId),
+      orderBy: (comments, { asc }) => [asc(comments.createdAt)],
+      with: { author: { columns: { id: true, name: true, image: true } } },
+    });
+  }
+
+  async createComment(userId: string, projectId: string, taskId: string, content: string) {
+    await this.ensureTaskOwnership(userId, projectId, taskId);
+    if (typeof content !== 'string') {
+      throw new BadRequestException('Comentário inválido');
+    }
+    const normalizedContent = content.trim();
+    if (!normalizedContent || normalizedContent.length > 2000) {
+      throw new BadRequestException('Comentário inválido');
+    }
+    const [comment] = await this.db.insert(schema.taskComments).values({
+      id: crypto.randomUUID(), taskId, userId, content: normalizedContent,
+    }).returning();
+    return this.db.query.taskComments.findFirst({
+      where: eq(schema.taskComments.id, comment.id),
+      with: { author: { columns: { id: true, name: true, image: true } } },
+    });
+  }
+
+  async updateComment(userId: string, projectId: string, taskId: string, commentId: string, content: string) {
+    await this.ensureTaskOwnership(userId, projectId, taskId);
+    if (typeof content !== 'string' || !content.trim() || content.trim().length > 2000) {
+      throw new BadRequestException('Comentário inválido');
+    }
+    const existing = await this.db.query.taskComments.findFirst({
+      where: and(eq(schema.taskComments.id, commentId), eq(schema.taskComments.taskId, taskId)),
+      columns: { userId: true },
+    });
+    if (!existing) throw new NotFoundException('Comentário não encontrado');
+    if (existing.userId !== userId) throw new ForbiddenException('Você só pode editar os próprios comentários');
+
+    await this.db.update(schema.taskComments)
+      .set({ content: content.trim() })
+      .where(and(eq(schema.taskComments.id, commentId), eq(schema.taskComments.taskId, taskId)));
+    return this.db.query.taskComments.findFirst({
+      where: eq(schema.taskComments.id, commentId),
+      with: { author: { columns: { id: true, name: true, image: true } } },
+    });
+  }
+
+  async deleteComment(userId: string, projectId: string, taskId: string, commentId: string) {
+    await this.ensureTaskOwnership(userId, projectId, taskId);
+    const existing = await this.db.query.taskComments.findFirst({
+      where: and(eq(schema.taskComments.id, commentId), eq(schema.taskComments.taskId, taskId)),
+      columns: { userId: true },
+    });
+    if (!existing) throw new NotFoundException('Comentário não encontrado');
+    if (existing.userId !== userId) throw new ForbiddenException('Você só pode excluir os próprios comentários');
+    await this.db.delete(schema.taskComments).where(and(eq(schema.taskComments.id, commentId), eq(schema.taskComments.taskId, taskId)));
+    return { success: true };
+  }
+
   async create(userId: string, projectId: string, dto: CreateTaskDto) {
     await this.ensureProjectOwnership(userId, projectId);
 
     const status = dto.status ?? 'todo';
 
-    const [lastTask] = await this.db
-      .select({ position: schema.tasks.position })
-      .from(schema.tasks)
-      .where(
-        and(
-          eq(schema.tasks.projectId, projectId),
-          eq(schema.tasks.status, status),
-        ),
-      )
-      .orderBy(desc(schema.tasks.position))
-      .limit(1);
+    return this.db.transaction(async (tx) => {
+      await tx.update(schema.tasks)
+        .set({ position: sql`${schema.tasks.position} + 1` })
+        .where(and(eq(schema.tasks.projectId, projectId), eq(schema.tasks.status, status)));
 
-    const position = lastTask ? lastTask.position + 1 : 0;
+      const [task] = await tx
+        .insert(schema.tasks)
+        .values({
+          id: crypto.randomUUID(),
+          projectId,
+          title: dto.title,
+          description: dto.description,
+          position: 0,
+          status,
+          priority: dto.priority ?? 'low',
+          dueDate: dto.dueDate ? new Date(dto.dueDate) : null,
+        })
+        .returning();
 
-    const [task] = await this.db
-      .insert(schema.tasks)
-      .values({
-        id: crypto.randomUUID(),
-        projectId,
-        title: dto.title,
-        description: dto.description,
-        position,
-        status,
-        priority: dto.priority ?? 'low',
-        dueDate: dto.dueDate ? new Date(dto.dueDate) : null,
-      })
-      .returning();
-
-    return task;
+      return task;
+    });
   }
 
   async update(
@@ -153,5 +205,14 @@ export class TasksService {
     if (!project) {
       throw new NotFoundException('Projeto não encontrado');
     }
+  }
+
+  private async ensureTaskOwnership(userId: string, projectId: string, taskId: string) {
+    await this.ensureProjectOwnership(userId, projectId);
+    const task = await this.db.query.tasks.findFirst({
+      where: and(eq(schema.tasks.id, taskId), eq(schema.tasks.projectId, projectId)),
+      columns: { id: true },
+    });
+    if (!task) throw new NotFoundException('Tarefa não encontrada');
   }
 }

@@ -1,6 +1,7 @@
 "use client"
 
 import { authClient } from "../../../../lib/auth-client"
+import Link from "next/link"
 
 
 interface RoadmapItem {
@@ -44,12 +45,9 @@ export default function RoadmapList({
                         </div>
 
                         {isAdmin && (
-                            <button
-                                type="button"
-                                className="rounded-md border border-border px-3 py-2 text-sm hover:bg-muted"
-                            >
-                                Editar
-                            </button>
+                            <Link href="/admin?section=roadmap" className="rounded-md border border-border px-3 py-2 text-sm hover:bg-muted">
+                                Gerenciar roadmap
+                            </Link>
                         )}
                     </div>
                 </article>

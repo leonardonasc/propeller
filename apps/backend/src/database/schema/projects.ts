@@ -15,6 +15,7 @@ export const projects = pgTable('projects', {
     updatedAt: timestamp('updated_at')
         .defaultNow()
         .notNull(),
+    archivedAt: timestamp('archived_at'),
 });
 
 export const projectsRelations = relations(projects, ({ one, many }) => ({

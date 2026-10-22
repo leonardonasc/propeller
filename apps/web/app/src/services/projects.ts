@@ -24,10 +24,10 @@ export async function createProject(data: CreateProjectInput) {
   return projectSchema.parse(result);
 }
 
-export async function getProjects() {
+export async function getProjects(archived = false) {
   const cookieStore = await cookies();
 
-  const response = await fetch(`${api_url}/projects`, {
+  const response = await fetch(`${api_url}/projects${archived ? "?archived=true" : ""}`, {
     method: 'GET',
     headers: {
       Cookie: cookieStore.toString(),

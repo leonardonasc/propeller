@@ -13,6 +13,9 @@ import { UsersModule } from "./users/users.module"
 import { ProjectsModule } from "./projects/projects.module"
 import { RoadmapModule } from "./roadmap/roadmap.module"
 import { TasksModule } from './tasks/tasks.module';
+import { AdminModule } from './admin/admin.module';
+import { AccountBanGuard } from './auth/guards/account-ban.guard';
+import { CalendarModule } from './calendar/calendar.module';
 
 @Module({
   imports: [
@@ -46,6 +49,17 @@ import { TasksModule } from './tasks/tasks.module';
                 input: false,
                 defaultValue: "free",
               },
+              username: { type: "string", input: false, required: false },
+              isBanned: {
+                type: "boolean",
+                input: false,
+                defaultValue: false,
+              },
+              bannedUntil: {
+                type: "date",
+                input: false,
+                required: false,
+              },
             },
           },
 
@@ -67,6 +81,10 @@ import { TasksModule } from './tasks/tasks.module';
     RoadmapModule,
 
     TasksModule,
+
+    AdminModule,
+
+    CalendarModule,
   ],
 
   controllers: [],
@@ -75,6 +93,10 @@ import { TasksModule } from './tasks/tasks.module';
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AccountBanGuard,
     },
   ],
 })

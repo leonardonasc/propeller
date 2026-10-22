@@ -28,6 +28,13 @@ export const taskSchema = z.object({
     updatedAt: z.coerce.date(),
 });
 
+export const taskCommentSchema = z.object({
+    id: z.string(), taskId: z.string(), userId: z.string(), content: z.string(),
+    createdAt: z.coerce.date(),
+    author: z.object({ id: z.string(), name: z.string(), image: z.string().nullable() }).nullable().optional(),
+});
+export type TaskComment = z.infer<typeof taskCommentSchema>;
+
 export const tasksSchema = z.array(taskSchema);
 
 export type CreateTaskInput = z.infer<typeof createTaskSchema>;

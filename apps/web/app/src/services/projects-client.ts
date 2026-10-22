@@ -52,3 +52,8 @@ export async function deleteProject(id: string) {
         throw new Error("Não foi possível excluir o projeto");
     }
 }
+
+export async function setProjectArchived(id: string, archived: boolean) {
+    const response = await fetch(`${api_url}/projects/${id}`, { method: "PATCH", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ archivedAt: archived ? new Date().toISOString() : null }) });
+    if (!response.ok) throw new Error("Não foi possível atualizar o arquivamento do projeto");
+}

@@ -1,6 +1,6 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, isNull, isNotNull, count } from 'drizzle-orm';
 
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
@@ -14,9 +14,10 @@ export class ProjectsService {
     private readonly db: NodePgDatabase<typeof schema>,
   ) { }
 
-  async findAll(userId: string) {
+  async findAll(userId: string, archived = false) {
     return this.db.query.projects.findMany({
-      where: eq(schema.projects.userId, userId),
+      where: and(eq(schema.projects.userId, userId), archived ? isNotNull(schema.projects.archivedAt) : isNull(schema.projects.archivedAt)),
+      orderBy: (projects, { desc }) => [desc(projects.updatedAt)],
       with: { 
         tasks: true,
       },
@@ -43,6 +44,12 @@ export class ProjectsService {
 }
 
   async create(userId: string, dto: CreateProjectDto) {
+    const [account] = await this.db.select({ plan: schema.user.plan }).from(schema.user).where(eq(schema.user.id, userId));
+    if (account?.plan !== 'premium') {
+      const [{ value: projectCount }] = await this.db.select({ value: count() }).from(schema.projects)
+        .where(and(eq(schema.projects.userId, userId), isNull(schema.projects.archivedAt)));
+      if (projectCount >= 3) throw new ForbiddenException('Usuarios do plano Free podem manter ate 3 projetos ativos.');
+    }
     const [project] = await this.db
       .insert(schema.projects)
       .values({
@@ -65,6 +72,7 @@ export class ProjectsService {
       .update(schema.projects)
       .set({
         ...dto,
+        archivedAt: dto.archivedAt === null ? null : dto.archivedAt ? new Date(dto.archivedAt) : undefined,
         updatedAt: new Date(),
       })
       .where(

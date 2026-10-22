@@ -34,42 +34,57 @@ export default function TaskCard({ task, onEdit, isOverlay = false }: TaskCardPr
             }}
             {...attributes}
             {...listeners}
-            className={`group rounded-lg border border-slate-800 bg-[#101827] p-4 transition hover:border-slate-700 ${isDragging && !isOverlay ? "z-10 opacity-0" : ""
-                } ${isOverlay ? "w-full cursor-grabbing shadow-2xl shadow-black/30" : ""
+            tabIndex={isOverlay ? -1 : 0}
+            onClick={() => {
+                if (!isOverlay) onEdit(task);
+            }}
+            onKeyDown={(event) => {
+                if (!isOverlay && event.target === event.currentTarget && event.key === "Enter") {
+                    event.preventDefault();
+                    onEdit(task);
+                    return;
+                }
+                listeners?.onKeyDown?.(event);
+            }}
+            className={`group rounded-xl border border-border bg-background p-4 text-foreground shadow-sm transition hover:border-primary/40 hover:shadow-md ${isDragging && !isOverlay ? "z-10 opacity-0" : ""
+                } ${isOverlay ? "w-full cursor-grabbing shadow-2xl shadow-black/30" : "cursor-pointer hover:bg-card"
                 }`}
         >
             <div className="flex items-start justify-between gap-3">
                 <div className="flex flex-col gap-1">
-                    <h3 className="text-sm leading-5 font-medium text-slate-200">
+                    <h3 className="text-sm leading-5 font-medium text-foreground">
                         {task.title}
                     </h3>
                     {/* <span className="w-fit items-center gap-1 rounded-full bg-slate-800 px-2 py-0.5 text-xs font-medium text-slate-400">
                         {task.priority}
                     </span> */}
                 </div>
-                
+
 
                 <button
                     type="button"
                     onPointerDown={(event) => event.stopPropagation()}
-                    onClick={() => onEdit(task)}
+                    onClick={(event) => {
+                        event.stopPropagation();
+                        onEdit(task);
+                    }}
                     aria-label={`Opções da tarefa ${task.title}`}
-                    className="shrink-0 rounded p-1 text-slate-600 opacity-100 transition hover:bg-slate-800 hover:text-slate-300 sm:opacity-0 sm:group-hover:opacity-100"
+                    className="shrink-0 rounded p-1 text-muted-foreground opacity-100 transition hover:bg-secondary hover:text-foreground sm:opacity-0 sm:group-hover:opacity-100"
                 >
                     <MoreHorizontal size={17} />
                 </button>
             </div>
 
             {task.description && (
-                <p className="mt-2 line-clamp-3 text-xs leading-5 text-slate-400">
+                <p className="mt-2 line-clamp-3 text-xs leading-5 text-muted-foreground">
                     {task.description}
                 </p>
             )}
-            
+
             {task.dueDate && (
-                <p className="mt-2 text-xs leading-5 text-slate-400 border-t border-slate-800 pt-2">
-                    Data de entrega:{" "}
-                    {task.dueDate.toLocaleDateString("pt-BR")}
+                <p className="mt-2 border-t border-border pt-2 text-xs leading-5 text-muted-foreground">
+                    Prazo (opcional){" "}
+
                 </p>
             )}
         </article>

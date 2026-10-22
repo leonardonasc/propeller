@@ -71,6 +71,48 @@
       "when": 1792445450741,
       "tag": "0009_condemned_klaw",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1792626697751,
+      "tag": "0011_simple_drax",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1792631599259,
+      "tag": "0012_user_bans",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1792633000000,
+      "tag": "0013_calendar_projects_archive",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1792634493222,
+      "tag": "0014_quiet_chamber",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1792635000000,
+      "tag": "0015_profiles_agenda_simplified",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1792637100304,
+      "tag": "0016_mighty_cloak",
+      "breakpoints": true
     }
   ]
 }

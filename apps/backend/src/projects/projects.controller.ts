@@ -9,6 +9,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 
 import { ProjectsService } from './projects.service';
@@ -28,8 +29,8 @@ export class ProjectsController {
   }
 
   @Get()
-  findAll(@Session() session: UserSession) {
-    return this.projectsService.findAll(session.user.id);
+  findAll(@Session() session: UserSession, @Query('archived') archived?: string) {
+    return this.projectsService.findAll(session.user.id, archived === 'true');
   }
 
   @Get(':id')

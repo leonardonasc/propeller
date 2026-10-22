@@ -83,18 +83,18 @@ export default function ProjectModal({
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="project-modal-title"
-                className="w-full max-w-lg rounded-2xl border border-slate-800 bg-[#0d1424] shadow-2xl"
+                className="w-full max-w-lg rounded-2xl border border-border bg-card text-card-foreground shadow-2xl"
             >
-                <div className="flex items-center justify-between border-b border-slate-800 px-6 py-5">
+                <div className="flex items-center justify-between border-b border-border px-6 py-5">
                     <div>
                         <h2
                             id="project-modal-title"
-                            className="text-lg font-semibold text-slate-100"
+                            className="text-lg font-semibold text-card-foreground"
                         >
                             {isEditing ? "Editar projeto" : "Novo projeto"}
                         </h2>
 
-                        <p className="mt-1 text-sm text-slate-400">
+                        <p className="mt-1 text-sm text-muted-foreground">
                             {isEditing
                                 ? "Atualize as informações do projeto."
                                 : "Adicione um projeto ao seu espaço."}
@@ -105,7 +105,7 @@ export default function ProjectModal({
                         type="button"
                         onClick={onClose}
                         aria-label="Fechar modal"
-                        className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-800 hover:text-white"
+                        className="rounded-lg p-2 text-muted-foreground transition hover:bg-secondary hover:text-foreground"
                     >
                         <X size={18} />
                     </button>
@@ -115,9 +115,9 @@ export default function ProjectModal({
                     <div className="space-y-2">
                         <label
                             htmlFor="project-name"
-                            className="text-sm font-medium text-slate-200"
+                            className="text-sm font-medium text-foreground"
                         >
-                            Título <span className="text-blue-400">*</span>
+                            Título <span className="text-primary">*</span>
                         </label>
 
                         <input
@@ -133,14 +133,14 @@ export default function ProjectModal({
                                 }))
                             }
                             placeholder="Ex.: Projeto de Desenvolvimento"
-                            className="w-full rounded-xl border border-slate-700 bg-[#080d1a] px-4 py-3 text-sm text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                            className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
                         />
                     </div>
 
                     <div className="space-y-2">
                         <label
                             htmlFor="project-description"
-                            className="text-sm font-medium text-slate-200"
+                            className="text-sm font-medium text-foreground"
                         >
                             Descrição
                         </label>
@@ -157,17 +157,17 @@ export default function ProjectModal({
                                 }))
                             }
                             placeholder="Descreva o que precisa ser feito..."
-                            className="w-full resize-none rounded-xl border border-slate-700 bg-[#080d1a] px-4 py-3 text-sm text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                            className="w-full resize-none rounded-xl border border-input bg-background px-4 py-3 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
                         />
                     </div>
 
-                    <div className="flex flex-col-reverse justify-between gap-3 border-t border-slate-800 pt-5 sm:flex-row sm:items-center">
+                    <div className="flex flex-col-reverse justify-between gap-3 border-t border-border pt-5 sm:flex-row sm:items-center">
                         {isEditing && onDelete ? (
                             <button
                                 type="button"
                                 onClick={handleDelete}
                                 disabled={isDeleting}
-                                className="inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-red-400 transition hover:bg-red-400/10 hover:text-red-300 disabled:cursor-not-allowed disabled:opacity-50"
+                                className="inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-danger transition hover:bg-danger/10 disabled:cursor-not-allowed disabled:opacity-50"
                             >
                                 {isDeleting ? <LoaderCircle size={16} className="animate-spin" /> : <Trash2 size={16} />}
                                 Excluir projeto
@@ -178,14 +178,14 @@ export default function ProjectModal({
                             <button
                                 type="button"
                                 onClick={onClose}
-                                className="rounded-xl border border-slate-700 px-4 py-2.5 text-sm font-medium text-slate-300 transition hover:bg-slate-800"
+                                className="rounded-xl border border-border px-4 py-2.5 text-sm font-medium text-muted-foreground transition hover:bg-secondary"
                             >
                                 Cancelar
                             </button>
 
                             <button
                                 type="submit"
-                                className="rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+                                className="rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50"
                             >
                                 {isEditing ? "Salvar alterações" : "Criar projeto"}
                             </button>

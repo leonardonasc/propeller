@@ -26,9 +26,83 @@
   --border: #1e293b;
   --input: #1e293b;
   --ring: #3b82f6;
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #f87171;
 
   --radius: 0.625rem;
 }
+
+#main-app[data-theme="light"] {
+  --background: #f4f6fb;
+  --foreground: #172033;
+  --card: #ffffff;
+  --card-foreground: #172033;
+  --popover: #ffffff;
+  --popover-foreground: #172033;
+  --primary: #4f46e5;
+  --primary-foreground: #ffffff;
+  --secondary: #e9edf5;
+  --secondary-foreground: #293449;
+  --muted: #edf0f6;
+  --muted-foreground: #68758b;
+  --accent: #4338ca;
+  --accent-foreground: #ffffff;
+  --border: #d9dfeb;
+  --input: #d9dfeb;
+  --ring: #6366f1;
+  --success: #047857;
+  --warning: #b45309;
+  --danger: #b91c1c;
+}
+
+#main-app[data-theme="dark"] {
+  --background: #080d1a;
+  --foreground: #f8fafc;
+  --card: #0d1424;
+  --card-foreground: #f8fafc;
+  --popover: #0d1424;
+  --popover-foreground: #f8fafc;
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+  --secondary: #151e30;
+  --secondary-foreground: #e2e8f0;
+  --muted: #111a2b;
+  --muted-foreground: #94a3b8;
+  --accent: #1d4ed8;
+  --accent-foreground: #ffffff;
+  --border: #1e293b;
+  --input: #1e293b;
+  --ring: #3b82f6;
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #f87171;
+}
+
+#main-app[data-theme="dracula"] {
+  --background: #282a36;
+  --foreground: #f8f8f2;
+  --card: #343746;
+  --card-foreground: #f8f8f2;
+  --popover: #343746;
+  --popover-foreground: #f8f8f2;
+  --primary: #bd93f9;
+  --primary-foreground: #282a36;
+  --secondary: #44475a;
+  --secondary-foreground: #f8f8f2;
+  --muted: #383a49;
+  --muted-foreground: #bdc0cc;
+  --accent: #ff79c6;
+  --accent-foreground: #282a36;
+  --border: #4b4e60;
+  --input: #4b4e60;
+  --ring: #bd93f9;
+  --success: #50fa7b;
+  --warning: #f1fa8c;
+  --danger: #ff5555;
+}
+
+#main-app[data-theme="dracula"] { color-scheme: dark; }
 
 @theme inline {
   --color-background: var(--background);
@@ -55,6 +129,9 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -67,6 +144,11 @@
 
 html {
   background: var(--background);
+  color-scheme: dark;
+}
+
+#main-app[data-theme="light"] {
+  color-scheme: light;
 }
 
 body {
@@ -77,6 +159,50 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
+
+.react-datepicker {
+  border-color: var(--border) !important;
+  background: var(--card) !important;
+  color: var(--card-foreground) !important;
+}
+
+.react-datepicker__header {
+  border-bottom-color: var(--border) !important;
+  background: var(--secondary) !important;
+}
+
+.react-datepicker__current-month,
+.react-datepicker__day-name,
+.react-datepicker__day {
+  color: var(--card-foreground) !important;
+}
+
+.react-datepicker__day:hover {
+  background: var(--secondary) !important;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  background: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+}
+
+.react-datepicker__day--outside-month,
+.react-datepicker__day--disabled {
+  color: var(--muted-foreground) !important;
+}
+
+select {
+  appearance: none;
+  padding-right: 2.5rem !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+  border-radius: 0.75rem;
+}
+
+select option { background: var(--card); color: var(--card-foreground); }
 
 button,
 a,
@@ -92,8 +218,8 @@ a {
 }
 
 ::selection {
-  background: #2563eb;
-  color: #ffffff;
+  background: var(--primary);
+  color: var(--primary-foreground);
 }
 
 ::-webkit-scrollbar {
@@ -102,14 +228,14 @@ a {
 }
 
 ::-webkit-scrollbar-track {
-  background: #080d1a;
+  background: var(--background);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: var(--border);
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: var(--muted-foreground);
 }
