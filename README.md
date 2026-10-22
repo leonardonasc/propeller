@@ -1,159 +1,103 @@
-# Turborepo starter
+# Propeller
 
-This Turborepo starter is maintained by the Turborepo core team.
+Propeller é uma plataforma para organizar projetos, tarefas e roadmaps em um só lugar. Inclui agenda, contas de usuário, ferramentas administrativas e notificações.
 
-## Using this example
+## Aplicações
 
-Run the following command:
+Este repositório é um monorepo gerenciado com Bun e Turborepo:
 
-```sh
-npx create-turbo@latest
+- `apps/web`: interface web em Next.js e React. Executa localmente em `http://localhost:3001`.
+- `apps/backend`: API em NestJS, com autenticação Better Auth, persistência PostgreSQL via Drizzle ORM e documentação Swagger.
+- `packages/`: configurações e pacotes compartilhados.
+
+## Requisitos
+
+- [Bun](https://bun.sh/) 1.3.12
+- Node.js 24 ou superior
+- Um banco PostgreSQL
+
+## Configuração local
+
+Na raiz do repositório, instale as dependências:
+
+```bash
+bun install
 ```
 
-## What's inside?
+Configure as variáveis de ambiente nos arquivos ignorados pelo Git `apps/backend/.env` e `apps/web/.env.local`:
 
-This Turborepo includes the following packages/apps:
+### `apps/backend/.env`
 
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `@next/eslint-plugin-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo build
+```dotenv
+DATABASE_URL=postgresql://usuario:senha@localhost:5432/propeller
+UI_URL=http://localhost:3001
+CORS_ORIGIN=http://localhost:3001
+PORT=3000
 ```
 
-Without global `turbo`, use your package manager:
+`DATABASE_URL` deve apontar para um banco PostgreSQL acessível. `UI_URL` é a origem confiável do frontend para Better Auth; `CORS_ORIGIN` é a origem permitida pelo CORS. Em produção, use as URLs HTTPS públicas correspondentes.
 
-```sh
-cd my-turborepo
-npx turbo build
-bun exec turbo build
-bun exec turbo build
+### `apps/web/.env.local`
+
+```dotenv
+API_URL=http://localhost:3000
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+`API_URL` é a URL base da API, sem acrescentar `/api`. O Next.js usa essa URL para encaminhar chamadas `/api/*` e o middleware consulta a sessão do usuário.
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+Não compartilhe nem faça commit de valores secretos ou arquivos `.env`. Para produção, configure as mesmas variáveis nos ambientes da plataforma de hospedagem. Configure também `BETTER_AUTH_SECRET` na API com um valor aleatório forte e privado.
 
-```sh
-turbo build --filter=docs
+## Banco de dados
+
+Com o `DATABASE_URL` configurado na API, aplique as migrações:
+
+```bash
+bun run --cwd apps/backend db:migrate
 ```
 
-Without global `turbo`:
+Execute o comando novamente quando novas migrações forem adicionadas. Confira o destino de `DATABASE_URL` antes de aplicar migrações em produção.
 
-```sh
-npx turbo build --filter=docs
-bun exec turbo build --filter=docs
-bun exec turbo build --filter=docs
+## Desenvolvimento
+
+Inicie frontend e API juntos a partir da raiz:
+
+```bash
+bun run dev
 ```
 
-### Develop
+Ou inicie cada aplicação em um terminal separado:
 
-To develop all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo dev
+```bash
+bun run --cwd apps/backend dev
 ```
 
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo dev
-bun exec turbo dev
-bun exec turbo dev
+```bash
+bun run --cwd apps/web dev
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+A interface fica em `http://localhost:3001`; a API usa `http://localhost:3000`. A documentação interativa da API fica em `http://localhost:3000/api/docs`, e o documento OpenAPI em `http://localhost:3000/api/docs-json`.
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+## Comandos úteis
 
-```sh
-turbo dev --filter=web
-```
+Na raiz:
 
-Without global `turbo`:
+| Comando | Descrição |
+| --- | --- |
+| `bun run dev` | Inicia as aplicações em modo de desenvolvimento |
+| `bun run build` | Compila os apps e pacotes |
+| `bun run lint` | Executa o lint dos pacotes configurados |
+| `bun run check-types` | Verifica os tipos TypeScript |
+| `bun run format` | Formata arquivos TypeScript, TSX e Markdown com Prettier |
 
-```sh
-npx turbo dev --filter=web
-bun exec turbo dev --filter=web
-bun exec turbo dev --filter=web
-```
+Comandos específicos:
 
-### Remote Caching
+| Comando | Descrição |
+| --- | --- |
+| `bun run --cwd apps/backend db:migrate` | Aplica as migrações do PostgreSQL |
+| `bun run --cwd apps/backend test` | Executa os testes unitários da API |
+| `bun run --cwd apps/backend test:e2e` | Executa os testes end-to-end da API |
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+## Deploy
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+Configure frontend e API com suas respectivas variáveis de ambiente. O frontend deve receber `API_URL` apontando para a URL pública da API. A API deve receber `DATABASE_URL`, `BETTER_AUTH_SECRET`, `UI_URL` e `CORS_ORIGIN`; `UI_URL` e `CORS_ORIGIN` devem corresponder à origem pública do frontend. Use HTTPS em produção e aplique as migrações do banco antes de disponibilizar a versão.
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-bun exec turbo login
-bun exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-bun exec turbo link
-bun exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
