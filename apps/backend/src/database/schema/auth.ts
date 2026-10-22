@@ -11,6 +11,7 @@ export const user = pgTable("user", {
   plan: text("plan", { enum: ["free", "premium"] }).default("free").notNull(),
   isBanned: boolean("is_banned").default(false).notNull(),
   bannedUntil: timestamp("banned_until"),
+  deletedAt: timestamp("deleted_at"),
   image: text("image"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")

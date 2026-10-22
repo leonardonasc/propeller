@@ -47,12 +47,12 @@ export function ProfileEditor({ initialName, initialUsername }: { initialName: s
       });
       if (!response.ok) {
         const result = await response.json().catch(() => null);
-        throw new Error(result?.message ?? "N?o foi poss?vel atualizar o perfil.");
+        throw new Error(result?.message ?? "Não foi possível atualizar o perfil.");
       }
       toast.success("Perfil atualizado.");
       router.refresh();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "N?o foi poss?vel atualizar o perfil.");
+      toast.error(error instanceof Error ? error.message : "Não foi possível atualizar o perfil.");
     } finally {
       setSaving(false);
     }
@@ -65,7 +65,7 @@ export function ProfileEditor({ initialName, initialUsername }: { initialName: s
       <label className="block space-y-1.5 text-sm font-medium">Nome<input required maxLength={80} value={name} onChange={(event) => setName(event.target.value)} className="h-10 w-full rounded-lg border border-input bg-background px-3 font-normal outline-none focus:border-primary" /></label>
       <label className="block space-y-1.5 text-sm font-medium">@usuário<input required minLength={3} maxLength={21} value={`@${username.replace(/^@/, "")}`} onChange={(event) => setUsername(event.target.value.replace(/^@/, "").toLowerCase())} className="h-10 w-full rounded-lg border border-input bg-background px-3 font-normal outline-none focus:border-primary" /><span className="block text-xs text-muted-foreground">3 a 20 caracteres: letras, números e _.</span></label>
       {availability === "checking" && <p className="text-xs text-muted-foreground">Verificando disponibilidade…</p>}
-      {availability === "available" && <p className="inline-flex items-center gap-1 text-xs text-success"><Check size={13} /> @ disponível</p>}
+      {availability === "available" && <p className="inline-flex items-center gap-1 text-xs text-success"><Check size={13} />disponível</p>}
       {availability === "taken" && <p className="text-xs text-danger">Este @ já está em uso.</p>}
       {availability === "invalid" && <p className="text-xs text-danger">Use de 3 a 20 letras minúsculas, números ou _.</p>}
       <div className="flex justify-end"><button type="submit" disabled={saving || availability !== "available" || unchanged || !name.trim()} className="inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground disabled:opacity-50">{saving && <LoaderCircle size={15} className="animate-spin" />}Salvar alterações</button></div>

@@ -13,8 +13,9 @@ export class AccountBanGuard implements CanActivate {
     const user = request.user;
     if (!user?.id) return true;
 
-    const [account] = await this.db.select({ isBanned: schema.user.isBanned, bannedUntil: schema.user.bannedUntil })
+    const [account] = await this.db.select({ isBanned: schema.user.isBanned, bannedUntil: schema.user.bannedUntil, deletedAt: schema.user.deletedAt })
       .from(schema.user).where(eq(schema.user.id, user.id));
+    if (account?.deletedAt) throw new ForbiddenException({ code: 'ACCOUNT_DELETED' });
     if (!account?.isBanned) return true;
 
     const expiresAt = account.bannedUntil ? new Date(account.bannedUntil) : null;

@@ -21,7 +21,10 @@ export function ProfileSummary({ name, username, email, role, plan }: ProfileSum
       </div>
       <div className="min-w-0">
         <h2 className="truncate text-lg font-semibold">{name}</h2>
-        <p className="truncate text-sm text-muted-foreground">@{username} ? {email}</p>
+       <div className="flex flex-col gap-1">
+         <p className="truncate text-sm text-muted-foreground">@{username}</p>
+        <p className="truncate text-xs text-muted-foreground/55">{email}</p>
+       </div>
         <div className="mt-3 flex flex-wrap gap-2">
           <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
             {role === "admin" ? "Administrador" : "Usuário"}
