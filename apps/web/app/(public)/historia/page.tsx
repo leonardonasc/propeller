@@ -1,3 +1,7 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Nossa história", description: "Conheça a história e a proposta do Propeller para organizar projetos, rotina e progresso." };
+
 export default function HistoryPage() {
   return (
     <div className="py-16 sm:px-10 lg:px-0">

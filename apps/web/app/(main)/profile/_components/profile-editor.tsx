@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Check, LoaderCircle, Pencil } from "lucide-react";
 import { toast } from "sonner";
-
-const api = process.env.NEXT_PUBLIC_API_URL;
+import { API_BASE_PATH } from "../../../src/services/api";
 
 export function ProfileEditor({ initialName, initialUsername }: { initialName: string; initialUsername: string }) {
   const router = useRouter();
@@ -23,7 +22,7 @@ export function ProfileEditor({ initialName, initialUsername }: { initialName: s
     setAvailability("checking");
     const timer = window.setTimeout(async () => {
       try {
-        const response = await fetch(`${api}/users/username-availability?username=${encodeURIComponent(normalized)}`, { credentials: "include", cache: "no-store" });
+        const response = await fetch(`${API_BASE_PATH}/users/username-availability?username=${encodeURIComponent(normalized)}`, { credentials: "include", cache: "no-store" });
         if (!response.ok) throw new Error();
         const result: { available: boolean; valid: boolean } = await response.json();
         setAvailability(result.valid && result.available ? "available" : "taken");
@@ -39,7 +38,7 @@ export function ProfileEditor({ initialName, initialUsername }: { initialName: s
     if (availability !== "available") return;
     setSaving(true);
     try {
-      const response = await fetch(`${api}/users/me`, {
+      const response = await fetch(`${API_BASE_PATH}/users/me`, {
         method: "PATCH",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

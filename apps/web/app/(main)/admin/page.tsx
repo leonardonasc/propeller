@@ -4,8 +4,8 @@ import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { AlertTriangle, ChevronLeft, ChevronRight, Pencil, Plus, ShieldCheck, Trash2, Users, X } from "lucide-react";
 import { PageHeader } from "../_components/page-header";
 import { toast } from "sonner";
+import { API_BASE_PATH } from "../../src/services/api";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 type UserRecord = {
   id: string; name: string; email: string; role: "user" | "admin"; plan: "free" | "premium";
   isBanned: boolean; bannedUntil: string | null; createdAt: string;
@@ -17,7 +17,7 @@ type RoadmapRecord = { id: string; title: string; description: string | null; st
 type RoadmapDraft = Omit<RoadmapRecord, "id">;
 
 async function api<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(`${apiUrl}${path}`, {
+  const response = await fetch(`${API_BASE_PATH}${path}`, {
     ...init,
     credentials: "include",
     headers: { "Content-Type": "application/json", ...init?.headers },

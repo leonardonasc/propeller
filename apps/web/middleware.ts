@@ -13,7 +13,7 @@ export async function middleware(request: NextRequest) {
 
   // The public landing remains available to everyone, even when signed in or banned.
   if (pathname !== "/" && pathname !== "/banned" && sessionCookie) {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    const apiUrl = process.env.API_URL;
     if (apiUrl) {
       try {
         const response = await fetch(`${apiUrl}/users/me`, {

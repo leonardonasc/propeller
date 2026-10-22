@@ -66,11 +66,12 @@ export function RegisterForm() {
                     Nome
                 </label>
 
-                <input
+                    <input
+                        id="name"
                     type="text"
                     placeholder="Seu nome"
                     {...register("name", { required: "Nome é obrigatório" })}
-                    className="h-11 w-full rounded-lg border border-slate-800 bg-[#0d1424] px-3.5 text-sm text-white placeholder:text-slate-600 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
+                    className="h-11 w-full rounded-lg border border-slate-800 bg-[#0d1424] px-3.5 text-sm text-white placeholder:text-slate-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
                     required
                 />
                 {formState.errors.name && (
@@ -88,11 +89,12 @@ export function RegisterForm() {
                     Email
                 </label>
 
-                <input
+                    <input
+                        id="register-email"
                     type="email"
                     placeholder="voce@email.com"
                     {...register("email", { required: "Email é obrigatório" })}
-                    className="h-11 w-full rounded-lg border border-slate-800 bg-[#0d1424] px-3.5 text-sm text-white placeholder:text-slate-600 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
+                    className="h-11 w-full rounded-lg border border-slate-800 bg-[#0d1424] px-3.5 text-sm text-white placeholder:text-slate-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
                     required
                 />
                 {formState.errors.email && (
@@ -110,11 +112,12 @@ export function RegisterForm() {
                     Senha
                 </label>
 
-                <input
+                    <input
+                        id="register-password"
                     type="password"
                     placeholder="••••••••"
                     {...register("password", { required: "Senha é obrigatória" })}
-                    className="h-11 w-full rounded-lg border border-slate-800 bg-[#0d1424] px-3.5 text-sm text-white placeholder:text-slate-600 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
+                    className="h-11 w-full rounded-lg border border-slate-800 bg-[#0d1424] px-3.5 text-sm text-white placeholder:text-slate-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
                     required
                 />
                 {formState.errors.password && (

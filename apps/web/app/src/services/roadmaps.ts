@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { CreateProjectInput, createProjectSchema, projectSchema, projectsSchema } from "../schemas/project";
 import { CreateRoadmapInput, createRoadmapSchema, roadmapsSchema } from "../schemas/roadmap";
 
-const api_url = process.env.NEXT_PUBLIC_API_URL;
+const api_url = process.env.API_URL;
 
 export async function createRoadmap(data: CreateRoadmapInput) {
     const body = createRoadmapSchema.parse(data);

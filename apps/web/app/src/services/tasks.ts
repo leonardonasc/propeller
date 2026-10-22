@@ -1,11 +1,10 @@
 // apps/web/app/src/services/tasks.ts
 
 import { CreateTaskInput, UpdateTaskInput, taskCommentSchema, type TaskComment } from "../schemas/tasks";
-
-const api_url = process.env.NEXT_PUBLIC_API_URL;
+import { API_BASE_PATH } from "./api";
 
 export async function createTask(projectId: string, data: CreateTaskInput) {
-    const response = await fetch(`${api_url}/projects/${projectId}/tasks`, {
+    const response = await fetch(`${API_BASE_PATH}/projects/${projectId}/tasks`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -21,7 +20,7 @@ export async function createTask(projectId: string, data: CreateTaskInput) {
     return response.json();
 }
 export async function getTasks(projectId: string) {
-    const response = await fetch(`${api_url}/projects/${projectId}/tasks`, {
+    const response = await fetch(`${API_BASE_PATH}/projects/${projectId}/tasks`, {
         method: "GET",
         credentials: "include",
         headers: {
@@ -36,7 +35,7 @@ export async function getTasks(projectId: string) {
     return response.json();
 }
 export async function getTask(projectId: string, taskId: string) {
-    const response = await fetch(`${api_url}/projects/${projectId}/tasks/${taskId}`, {
+    const response = await fetch(`${API_BASE_PATH}/projects/${projectId}/tasks/${taskId}`, {
         method: "GET",
         credentials: "include",
         headers: {
@@ -55,7 +54,7 @@ export async function updateTask(
     taskId: string,
     data: UpdateTaskInput,
 ) {
-    const response = await fetch(`${api_url}/projects/${projectId}/tasks/${taskId}`, {
+    const response = await fetch(`${API_BASE_PATH}/projects/${projectId}/tasks/${taskId}`, {
         method: "PATCH",
         credentials: "include",
         headers: {
@@ -70,7 +69,7 @@ export async function updateTask(
     return response.json();
 }
 export async function deleteTask(projectId: string, taskId: string) {
-    const response = await fetch(`${api_url}/projects/${projectId}/tasks/${taskId}`, {
+    const response = await fetch(`${API_BASE_PATH}/projects/${projectId}/tasks/${taskId}`, {
         method: "DELETE",
         credentials: "include",
         headers: {
@@ -85,13 +84,13 @@ export async function deleteTask(projectId: string, taskId: string) {
 }
 
 export async function getTaskComments(projectId: string, taskId: string): Promise<TaskComment[]> {
-    const response = await fetch(`${api_url}/projects/${projectId}/tasks/${taskId}/comments`, { credentials: "include", cache: "no-store" });
+    const response = await fetch(`${API_BASE_PATH}/projects/${projectId}/tasks/${taskId}/comments`, { credentials: "include", cache: "no-store" });
     if (!response.ok) throw new Error("Não foi possível carregar os comentários");
     return taskCommentSchema.array().parse(await response.json());
 }
 
 export async function createTaskComment(projectId: string, taskId: string, content: string): Promise<TaskComment> {
-    const response = await fetch(`${api_url}/projects/${projectId}/tasks/${taskId}/comments`, {
+    const response = await fetch(`${API_BASE_PATH}/projects/${projectId}/tasks/${taskId}/comments`, {
         method: "POST", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content }),
     });
     if (!response.ok) throw new Error("Não foi possível adicionar o comentário");
@@ -99,7 +98,7 @@ export async function createTaskComment(projectId: string, taskId: string, conte
 }
 
 export async function updateTaskComment(projectId: string, taskId: string, commentId: string, content: string): Promise<TaskComment> {
-    const response = await fetch(`${api_url}/projects/${projectId}/tasks/${taskId}/comments/${commentId}`, {
+    const response = await fetch(`${API_BASE_PATH}/projects/${projectId}/tasks/${taskId}/comments/${commentId}`, {
         method: "PATCH", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content }),
     });
     if (!response.ok) throw new Error("Não foi possível editar o comentário");
@@ -107,6 +106,6 @@ export async function updateTaskComment(projectId: string, taskId: string, comme
 }
 
 export async function deleteTaskComment(projectId: string, taskId: string, commentId: string) {
-    const response = await fetch(`${api_url}/projects/${projectId}/tasks/${taskId}/comments/${commentId}`, { method: "DELETE", credentials: "include" });
+    const response = await fetch(`${API_BASE_PATH}/projects/${projectId}/tasks/${taskId}/comments/${commentId}`, { method: "DELETE", credentials: "include" });
     if (!response.ok) throw new Error("Não foi possível excluir o comentário");
 }

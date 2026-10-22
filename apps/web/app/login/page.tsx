@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { authClient } from "../../lib/auth-client";
 import { LoginForm } from "./_components/sign-in";
 import { RegisterForm } from "./_components/sign-up";
+import AppToaster from "../../components/app-toaster";
 
 export default function AuthPage() {
   const { data: session, isPending: isLoading } = authClient.useSession();
@@ -25,6 +26,7 @@ export default function AuthPage() {
   if (isLoading || session) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#080d1a]">
+        <AppToaster />
         <div className="flex items-center gap-2 text-sm text-slate-400">
           <div className="size-4 animate-spin rounded-full border-2 border-slate-700 border-t-blue-500" />
           Carregando...
@@ -35,6 +37,7 @@ export default function AuthPage() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#080d1a] px-4 py-10">
+      <AppToaster />
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="mb-8 text-center">
@@ -46,7 +49,7 @@ export default function AuthPage() {
             Propeller
           </h1>
 
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-sm text-slate-400">
             Organize seu trabalho em um só lugar.
           </p>
         </div>
@@ -62,7 +65,7 @@ export default function AuthPage() {
                 "rounded-md px-3 py-2 text-sm font-medium transition",
                 activeForm === "login"
                   ? "bg-[#172238] text-white shadow-sm"
-                  : "text-slate-500 hover:text-slate-300",
+                  : "text-slate-400 hover:text-slate-300",
               ].join(" ")}
             >
               Entrar
@@ -75,7 +78,7 @@ export default function AuthPage() {
                 "rounded-md px-3 py-2 text-sm font-medium transition",
                 activeForm === "register"
                   ? "bg-[#172238] text-white shadow-sm"
-                  : "text-slate-500 hover:text-slate-300",
+                  : "text-slate-400 hover:text-slate-300",
               ].join(" ")}
             >
               Criar conta
@@ -86,7 +89,7 @@ export default function AuthPage() {
         </div>
 
         {/* Footer */}
-        <p className="mt-6 text-center text-xs text-slate-600">
+        <p className="mt-6 text-center text-xs text-slate-400">
           Ao continuar, você concorda com os termos de uso do Propeller.
         </p>
       </div>

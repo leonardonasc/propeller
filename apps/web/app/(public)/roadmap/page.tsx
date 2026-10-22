@@ -1,6 +1,8 @@
+import type { Metadata } from "next";
 import { getRoadmap } from "../../src/services/roadmaps"
 import RoadmapList from "./_components/roadmap-list"
 
+export const metadata: Metadata = { title: "Roadmap", description: "Acompanhe as melhorias e funcionalidades planejadas para o Propeller." };
 
 export default async function RoadmapPage() {
   const roadmap = await getRoadmap()

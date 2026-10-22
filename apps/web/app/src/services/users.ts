@@ -1,6 +1,6 @@
 
 
-const api_url = process.env.NEXT_PUBLIC_API_URL;
+const api_url = process.env.API_URL;
 
 export async function getUser(headers: Record<string, string> = {}) {
     const response = await fetch(`${api_url}/users/me`, {

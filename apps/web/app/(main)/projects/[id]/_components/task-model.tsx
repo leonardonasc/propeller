@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import DatePicker from "react-datepicker";
+import "../../../../datepicker.css";
 import { Activity, LoaderCircle, MessageSquare, Pencil, Send, Trash2, X, Check } from "lucide-react"
 import { createTaskComment, deleteTaskComment, getTaskComments, updateTaskComment } from "../../../../src/services/tasks";
 import type { TaskComment } from "../../../../src/schemas/tasks";

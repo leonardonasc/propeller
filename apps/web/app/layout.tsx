@@ -1,20 +1,9 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
-import { Toaster } from "sonner";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-});
 
 export const metadata: Metadata = {
-  title: "Propeller | Workspace",
-  description: "Organize projetos, ideias e progresso em um só lugar.",
+  title: { default: "Propeller | Organize projetos e tarefas", template: "%s | Propeller" },
+  description: "Organize projetos, tarefas e rotina em um só lugar. Transforme ideias em progresso com o Propeller.",
 };
 
 export default function RootLayout({
@@ -24,9 +13,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body>
         {children}
-        <Toaster position="bottom-right" />
       </body>
     </html>
   );

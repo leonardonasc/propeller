@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "react-datepicker/dist/react-datepicker.css";
 
 :root {
   --background: #080d1a;
@@ -12,6 +11,7 @@
   --popover-foreground: #f8fafc;
 
   --primary: #2563eb;
+  --primary-text: #60a5fa;
   --primary-foreground: #ffffff;
 
   --secondary: #151e30;
@@ -41,11 +41,12 @@
   --popover: #ffffff;
   --popover-foreground: #172033;
   --primary: #4f46e5;
+  --primary-text: #4338ca;
   --primary-foreground: #ffffff;
   --secondary: #e9edf5;
   --secondary-foreground: #293449;
   --muted: #edf0f6;
-  --muted-foreground: #68758b;
+  --muted-foreground: #596579;
   --accent: #4338ca;
   --accent-foreground: #ffffff;
   --border: #d9dfeb;
@@ -69,6 +70,7 @@
 
   /* Primary */
   --primary: #2563eb;
+  --primary-text: #60a5fa;
   --primary-foreground: #ffffff;
 
   /* Secondary */
@@ -153,38 +155,6 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-.react-datepicker {
-  border-color: var(--border) !important;
-  background: var(--card) !important;
-  color: var(--card-foreground) !important;
-}
-
-.react-datepicker__header {
-  border-bottom-color: var(--border) !important;
-  background: var(--secondary) !important;
-}
-
-.react-datepicker__current-month,
-.react-datepicker__day-name,
-.react-datepicker__day {
-  color: var(--card-foreground) !important;
-}
-
-.react-datepicker__day:hover {
-  background: var(--secondary) !important;
-}
-
-.react-datepicker__day--selected,
-.react-datepicker__day--keyboard-selected {
-  background: var(--primary) !important;
-  color: var(--primary-foreground) !important;
-}
-
-.react-datepicker__day--outside-month,
-.react-datepicker__day--disabled {
-  color: var(--muted-foreground) !important;
-}
-
 select {
   appearance: none;
   padding-right: 2.5rem !important;
@@ -197,12 +167,15 @@ select {
 
 select option { background: var(--card); color: var(--card-foreground); }
 
-button,
-a,
-input,
-textarea,
-select {
-  outline: none;
+.text-primary { color: var(--primary-text); }
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
 }
 
 button,

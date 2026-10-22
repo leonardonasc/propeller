@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { CreateProjectInput, createProjectSchema, projectSchema, projectsSchema } from "../schemas/project";
 
-const api_url = process.env.NEXT_PUBLIC_API_URL;
+const api_url = process.env.API_URL;
 
 export async function createProject(data: CreateProjectInput) {
   const body = createProjectSchema.parse(data);

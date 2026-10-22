@@ -1,11 +1,10 @@
 import { createProjectSchema, projectSchema, type CreateProjectInput } from "../schemas/project";
-
-const api_url = process.env.NEXT_PUBLIC_API_URL;
+import { API_BASE_PATH } from "./api";
 
 export async function createProject(data: CreateProjectInput) {
     const body = createProjectSchema.parse(data);
 
-    const response = await fetch(`${api_url}/projects`, {
+    const response = await fetch(`${API_BASE_PATH}/projects`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -24,7 +23,7 @@ export async function createProject(data: CreateProjectInput) {
 }
 
 export async function updateProject(id: string, data: Partial<CreateProjectInput>) {
-    const response = await fetch(`${api_url}/projects/${id}`, {
+    const response = await fetch(`${API_BASE_PATH}/projects/${id}`, {
         method: "PATCH",
         credentials: "include",
         headers: {
@@ -43,7 +42,7 @@ export async function updateProject(id: string, data: Partial<CreateProjectInput
 }
 
 export async function deleteProject(id: string) {
-    const response = await fetch(`${api_url}/projects/${id}`, {
+    const response = await fetch(`${API_BASE_PATH}/projects/${id}`, {
         method: "DELETE",
         credentials: "include",
     });
@@ -54,6 +53,6 @@ export async function deleteProject(id: string) {
 }
 
 export async function setProjectArchived(id: string, archived: boolean) {
-    const response = await fetch(`${api_url}/projects/${id}`, { method: "PATCH", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ archivedAt: archived ? new Date().toISOString() : null }) });
+    const response = await fetch(`${API_BASE_PATH}/projects/${id}`, { method: "PATCH", credentials: "include", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ archivedAt: archived ? new Date().toISOString() : null }) });
     if (!response.ok) throw new Error("Não foi possível atualizar o arquivamento do projeto");
 }
