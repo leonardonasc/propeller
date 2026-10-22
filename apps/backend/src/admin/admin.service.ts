@@ -1,5 +1,5 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { count, desc, eq, ilike, or } from 'drizzle-orm';
+import { and, count, desc, eq, ilike, isNull, or } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { DATABASE_CONNECTION } from '../database/database-connection';
 import * as schema from '../database/schema';
@@ -14,6 +14,7 @@ export class AdminService {
     const filter = search.trim()
       ? or(ilike(schema.user.name, `%${search.trim()}%`), ilike(schema.user.email, `%${search.trim()}%`))
       : undefined;
+    const activeFilter = filter ? and(filter, isNull(schema.user.deletedAt)) : isNull(schema.user.deletedAt);
     const [users, [{ total }]] = await Promise.all([
       this.db.select({
         id: schema.user.id,
@@ -24,8 +25,8 @@ export class AdminService {
         isBanned: schema.user.isBanned,
         bannedUntil: schema.user.bannedUntil,
         createdAt: schema.user.createdAt,
-      }).from(schema.user).where(filter).orderBy(desc(schema.user.createdAt)).limit(pageSize).offset(offset),
-      this.db.select({ total: count() }).from(schema.user).where(filter),
+      }).from(schema.user).where(activeFilter).orderBy(desc(schema.user.createdAt)).limit(pageSize).offset(offset),
+      this.db.select({ total: count() }).from(schema.user).where(activeFilter),
     ]);
     return { users, total, page, pageSize };
   }
@@ -87,5 +88,22 @@ export class AdminService {
       createdAt: schema.user.createdAt,
     });
     return updated;
+  }
+
+  async softDeleteUser(adminId: string, id: string) {
+    if (adminId === id) throw new BadRequestException('NÃ£o Ã© possÃ­vel excluir a prÃ³pria conta de administrador.');
+    const [deleted] = await this.db.update(schema.user).set({
+      deletedAt: new Date(), isBanned: true, updatedAt: new Date(),
+    }).where(and(eq(schema.user.id, id), isNull(schema.user.deletedAt))).returning({ id: schema.user.id });
+    if (!deleted) throw new NotFoundException('UsuÃ¡rio nÃ£o encontrado ou jÃ¡ excluÃ­do.');
+    await this.db.delete(schema.session).where(eq(schema.session.userId, id));
+    return { success: true };
+  }
+
+  async permanentlyDeleteUser(adminId: string, id: string) {
+    if (adminId === id) throw new BadRequestException('NÃ£o Ã© possÃ­vel excluir a prÃ³pria conta de administrador.');
+    const [deleted] = await this.db.delete(schema.user).where(eq(schema.user.id, id)).returning({ id: schema.user.id });
+    if (!deleted) throw new NotFoundException('UsuÃ¡rio nÃ£o encontrado.');
+    return { success: true };
   }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Param, ParseIntPipe, Patch, Query, UseGuards, Body } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Patch, Query, UseGuards, Body, Delete } from '@nestjs/common';
 import { Session } from '@thallesp/nestjs-better-auth';
 import type { UserSession } from '@thallesp/nestjs-better-auth';
 import { AdminGuard } from '../auth/guards/admin.guard';
@@ -27,5 +27,15 @@ export class AdminController {
   @Patch('users/:id')
   updateUser(@Session() session: UserSession, @Param('id') id: string, @Body() dto: UpdateAdminUserDto) {
     return this.adminService.updateUser(session.user.id, id, dto);
+  }
+
+  @Delete('users/:id')
+  softDeleteUser(@Session() session: UserSession, @Param('id') id: string) {
+    return this.adminService.softDeleteUser(session.user.id, id);
+  }
+
+  @Delete('users/:id/permanent')
+  permanentlyDeleteUser(@Session() session: UserSession, @Param('id') id: string) {
+    return this.adminService.permanentlyDeleteUser(session.user.id, id);
   }
 }

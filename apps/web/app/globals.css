@@ -57,50 +57,43 @@
 }
 
 #main-app[data-theme="dark"] {
-  --background: #080d1a;
-  --foreground: #f8fafc;
-  --card: #0d1424;
-  --card-foreground: #f8fafc;
-  --popover: #0d1424;
-  --popover-foreground: #f8fafc;
+  /* Background */
+  --background: #090909;
+  --foreground: #fafafa;
+
+  /* Surfaces */
+  --card: #101010;
+  --card-foreground: #fafafa;
+  --popover: #141414;
+  --popover-foreground: #fafafa;
+
+  /* Primary */
   --primary: #2563eb;
   --primary-foreground: #ffffff;
-  --secondary: #151e30;
-  --secondary-foreground: #e2e8f0;
-  --muted: #111a2b;
-  --muted-foreground: #94a3b8;
-  --accent: #1d4ed8;
-  --accent-foreground: #ffffff;
-  --border: #1e293b;
-  --input: #1e293b;
-  --ring: #3b82f6;
-  --success: #34d399;
-  --warning: #fbbf24;
+
+  /* Secondary */
+  --secondary: #1a1a1a;
+  --secondary-foreground: #e5e5e5;
+
+  /* Muted */
+  --muted: #141414;
+  --muted-foreground: #a1a1aa;
+
+  /* Accent */
+  --accent: #1c1c1c;
+  --accent-foreground: #60a5fa;
+
+  /* Borders & inputs */
+  --border: #262626;
+  --input: #262626;
+  --ring: #2563eb;
+
+  /* Status */
+  --success: #4ade80;
+  --warning: #facc15;
   --danger: #f87171;
 }
 
-#main-app[data-theme="dracula"] {
-  --background: #282a36;
-  --foreground: #f8f8f2;
-  --card: #343746;
-  --card-foreground: #f8f8f2;
-  --popover: #343746;
-  --popover-foreground: #f8f8f2;
-  --primary: #bd93f9;
-  --primary-foreground: #282a36;
-  --secondary: #44475a;
-  --secondary-foreground: #f8f8f2;
-  --muted: #383a49;
-  --muted-foreground: #bdc0cc;
-  --accent: #ff79c6;
-  --accent-foreground: #282a36;
-  --border: #4b4e60;
-  --input: #4b4e60;
-  --ring: #bd93f9;
-  --success: #50fa7b;
-  --warning: #f1fa8c;
-  --danger: #ff5555;
-}
 
 #main-app[data-theme="dracula"] { color-scheme: dark; }
 

@@ -113,6 +113,13 @@
       "when": 1792637100304,
       "tag": "0016_mighty_cloak",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1792640232061,
+      "tag": "0018_thin_the_fury",
+      "breakpoints": true
     }
   ]
 }

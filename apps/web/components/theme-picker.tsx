@@ -6,8 +6,7 @@ import { useEffect, useState } from "react";
 const themes = [
   { id: "night", label: "Noturno", swatch: "#2563eb" },
   { id: "light", label: "Claro", swatch: "#4f46e5" },
-  { id: "dark", label: "Dark mode", swatch: "#080d1a" },
-  { id: "dracula", label: "Drácula", swatch: "#bd93f9" },
+  // { id: "dark", label: "Dark mode", swatch: "#080d1a" },
 ] as const;
 
 type ThemeId = (typeof themes)[number]["id"];
