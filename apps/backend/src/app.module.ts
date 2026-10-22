@@ -7,15 +7,15 @@ import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 import { NodePgDatabase } from "drizzle-orm/node-postgres"
 
-import { DatabaseModule } from "./database/database.module"
-import { DATABASE_CONNECTION } from "./database/database-connection"
-import { UsersModule } from "./users/users.module"
-import { ProjectsModule } from "./projects/projects.module"
-import { RoadmapModule } from "./roadmap/roadmap.module"
-import { TasksModule } from './tasks/tasks.module';
-import { AdminModule } from './admin/admin.module';
-import { AccountBanGuard } from './auth/guards/account-ban.guard';
-import { CalendarModule } from './calendar/calendar.module';
+import { DatabaseModule } from "./database/database.module.js"
+import { DATABASE_CONNECTION } from "./database/database-connection.js"
+import { UsersModule } from "./users/users.module.js"
+import { ProjectsModule } from "./projects/projects.module.js"
+import { RoadmapModule } from "./roadmap/roadmap.module.js"
+import { TasksModule } from './tasks/tasks.module.js';
+import { AdminModule } from './admin/admin.module.js';
+import { AccountBanGuard } from './auth/guards/account-ban.guard.js';
+import { CalendarModule } from './calendar/calendar.module.js';
 
 @Module({
   imports: [

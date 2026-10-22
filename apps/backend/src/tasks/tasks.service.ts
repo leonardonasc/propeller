@@ -1,11 +1,11 @@
 
 import { BadRequestException, ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { and, eq, sql } from 'drizzle-orm';
-import { UpdateTaskDto } from './dto/update-task.dto';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { DATABASE_CONNECTION } from '../database/database-connection';
+import { UpdateTaskDto } from './dto/update-task.dto.js';
+import { CreateTaskDto } from './dto/create-task.dto.js';
+import { DATABASE_CONNECTION } from '../database/database-connection.js';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import * as schema from '../database/schema';
+import * as schema from '../database/schema/index.js';
 
 @Injectable()
 export class TasksService {

@@ -10,11 +10,11 @@ import {
 } from '@nestjs/common'
 import { Public } from '@thallesp/nestjs-better-auth'
 
-import { AdminGuard } from '../auth/guards/admin.guard'
+import { AdminGuard } from '../auth/guards/admin.guard.js'
 
-import { CreateRoadmapDto } from './dto/create-roadmap.dto'
-import { UpdateRoadmapDto } from './dto/update-roadmap.dto'
-import { RoadmapService } from './roadmap.service'
+import { CreateRoadmapDto } from './dto/create-roadmap.dto.js'
+import { UpdateRoadmapDto } from './dto/update-roadmap.dto.js'
+import { RoadmapService } from './roadmap.service.js'
 
 @Controller('roadmap')
 export class RoadmapController {

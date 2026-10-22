@@ -1,5 +1,5 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateTaskDto } from './create-task.dto';
+import { CreateTaskDto } from './create-task.dto.js';
 import { IsDateString, IsIn, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class UpdateTaskDto extends PartialType(CreateTaskDto) {

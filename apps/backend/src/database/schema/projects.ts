@@ -1,7 +1,7 @@
 import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
-import { user } from './auth';
+import { user } from './auth.js';
 import { relations } from 'drizzle-orm';
-import { tasks } from './tasks';
+import { tasks } from './tasks.js';
 
 export const projects = pgTable('projects', {
     id: text('id').primaryKey(),

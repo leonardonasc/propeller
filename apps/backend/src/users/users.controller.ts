@@ -1,7 +1,7 @@
 import { Public, Session } from '@thallesp/nestjs-better-auth';
 import type { UserSession } from '@thallesp/nestjs-better-auth';
 import { Body, Controller, Get, Patch, Query } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { UsersService } from './users.service.js';
 
 @Controller('users')
 export class UsersController {

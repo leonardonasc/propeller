@@ -7,8 +7,8 @@ import {
 } from "drizzle-orm/pg-core"
 import { relations } from "drizzle-orm"
 
-import { projects } from "./projects"
-import { user } from "./auth"
+import { projects } from "./projects.js"
+import { user } from "./auth.js"
 
 export const tasks = pgTable("tasks", {
   id: text("id").primaryKey(),

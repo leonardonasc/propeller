@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/commo
 import { Session } from '@thallesp/nestjs-better-auth';
 import type { UserSession } from '@thallesp/nestjs-better-auth';
 import { IsBoolean, IsISO8601, IsOptional, IsString, MaxLength } from 'class-validator';
-import { CalendarService } from './calendar.service';
+import { CalendarService } from './calendar.service.js';
 
 class CreateEventDto {
   @IsString() @MaxLength(160) title: string;

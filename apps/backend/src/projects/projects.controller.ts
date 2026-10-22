@@ -12,9 +12,9 @@ import {
   Query,
 } from '@nestjs/common';
 
-import { ProjectsService } from './projects.service';
-import { CreateProjectDto } from './dto/create-project.dto';
-import { UpdateProjectDto } from './dto/update-project.dto';
+import { ProjectsService } from './projects.service.js';
+import { CreateProjectDto } from './dto/create-project.dto.js';
+import { UpdateProjectDto } from './dto/update-project.dto.js';
 
 @Controller('projects')
 export class ProjectsController {

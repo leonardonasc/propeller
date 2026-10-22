@@ -2,11 +2,11 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { NodePgDatabase } from 'drizzle-orm/node-postgres'
 import { eq } from 'drizzle-orm'
 
-import { DATABASE_CONNECTION } from '../database/database-connection'
-import * as schema from '../database/schema'
+import { DATABASE_CONNECTION } from '../database/database-connection.js'
+import * as schema from '../database/schema/index.js'
 
-import { CreateRoadmapDto } from './dto/create-roadmap.dto'
-import { UpdateRoadmapDto } from './dto/update-roadmap.dto'
+import { CreateRoadmapDto } from './dto/create-roadmap.dto.js'
+import { UpdateRoadmapDto } from './dto/update-roadmap.dto.js'
 
 @Injectable()
 export class RoadmapService {

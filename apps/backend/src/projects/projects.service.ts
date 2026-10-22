@@ -2,10 +2,10 @@ import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nest
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { and, eq, isNull, isNotNull, count } from 'drizzle-orm';
 
-import { CreateProjectDto } from './dto/create-project.dto';
-import { UpdateProjectDto } from './dto/update-project.dto';
-import { DATABASE_CONNECTION } from '../database/database-connection';
-import * as schema from '../database/schema';
+import { CreateProjectDto } from './dto/create-project.dto.js';
+import { UpdateProjectDto } from './dto/update-project.dto.js';
+import { DATABASE_CONNECTION } from '../database/database-connection.js';
+import * as schema from '../database/schema/index.js';
 
 @Injectable()
 export class ProjectsService {

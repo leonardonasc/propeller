@@ -1,12 +1,12 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import { DATABASE_CONNECTION } from "./database-connection";
+import { DATABASE_CONNECTION } from "./database-connection.js";
 import { Pool } from "pg";
-import * as authSchema from "./schema/auth";
-import * as projectsSchema from "./schema/projects";
-import * as roadmapSchema from "./schema/roadmap";
-import * as tasksSchema from "./schema/tasks";
-import * as calendarSchema from "./schema/calendar";
+import * as authSchema from "./schema/auth.js";
+import * as projectsSchema from "./schema/projects.js";
+import * as roadmapSchema from "./schema/roadmap.js";
+import * as tasksSchema from "./schema/tasks.js";
+import * as calendarSchema from "./schema/calendar.js";
 import { drizzle } from "drizzle-orm/node-postgres";
 
 @Module({

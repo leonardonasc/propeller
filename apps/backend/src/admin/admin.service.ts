@@ -1,9 +1,9 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { and, count, desc, eq, ilike, isNull, or } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { DATABASE_CONNECTION } from '../database/database-connection';
-import * as schema from '../database/schema';
-import { UpdateAdminUserDto } from './dto/update-admin-user.dto';
+import { DATABASE_CONNECTION } from '../database/database-connection.js';
+import * as schema from '../database/schema/index.js';
+import { UpdateAdminUserDto } from './dto/update-admin-user.dto.js';
 
 @Injectable()
 export class AdminService {

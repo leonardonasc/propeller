@@ -1,5 +1,5 @@
 import { pgTable, text, timestamp, boolean, index } from 'drizzle-orm/pg-core';
-import { user } from './auth';
+import { user } from './auth.js';
 
 export const calendarEvents = pgTable('calendar_events', {
   id: text('id').primaryKey(),

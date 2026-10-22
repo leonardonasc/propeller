@@ -1,9 +1,9 @@
 import { Controller, Get, Param, ParseIntPipe, Patch, Query, UseGuards, Body, Delete } from '@nestjs/common';
 import { Session } from '@thallesp/nestjs-better-auth';
 import type { UserSession } from '@thallesp/nestjs-better-auth';
-import { AdminGuard } from '../auth/guards/admin.guard';
-import { AdminService } from './admin.service';
-import { UpdateAdminUserDto } from './dto/update-admin-user.dto';
+import { AdminGuard } from '../auth/guards/admin.guard.js';
+import { AdminService } from './admin.service.js';
+import { UpdateAdminUserDto } from './dto/update-admin-user.dto.js';
 
 @Controller('admin')
 @UseGuards(AdminGuard)

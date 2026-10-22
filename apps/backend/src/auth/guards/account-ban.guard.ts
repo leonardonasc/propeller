@@ -1,8 +1,8 @@
 import { ForbiddenException, Inject, Injectable, type CanActivate, type ExecutionContext } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { DATABASE_CONNECTION } from '../../database/database-connection';
-import * as schema from '../../database/schema';
+import { DATABASE_CONNECTION } from '../../database/database-connection.js';
+import * as schema from '../../database/schema/index.js';
 
 @Injectable()
 export class AccountBanGuard implements CanActivate {
