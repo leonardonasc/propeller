@@ -1,11 +1,12 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class CreateProjectDto {
-    @IsString()
-    @IsNotEmpty()
-    name: string;
+  @ApiProperty({ example: 'Website novo', maxLength: 20 })
+  @IsString() @IsNotEmpty() @MaxLength(20)
+  name: string;
 
-    @IsString()
-    @IsOptional()
-    description?: string;
+  @ApiPropertyOptional({ example: 'Redesign da loja e do checkout.', maxLength: 100 })
+  @IsString() @IsOptional() @MaxLength(100)
+  description?: string;
 }

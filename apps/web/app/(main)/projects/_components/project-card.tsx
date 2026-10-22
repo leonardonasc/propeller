@@ -9,7 +9,7 @@ interface ProjectCardProps { id: string; name: string; description: string | nul
 
 export function ProjectCard({ id, name, description, archived = false }: ProjectCardProps) {
   async function toggleArchive() {
-    try { await setProjectArchived(id, !archived); toast.success(archived ? "Projeto restaurado." : "Projeto arquivado."); window.location.reload(); }
+    try { await setProjectArchived(id, !archived); window.dispatchEvent(new Event("propeller:projects-changed")); toast.success(archived ? "Projeto restaurado." : "Projeto arquivado."); window.location.reload(); }
     catch { toast.error("Não foi possível atualizar o projeto."); }
   }
   return (

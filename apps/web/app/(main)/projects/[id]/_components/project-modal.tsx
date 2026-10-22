@@ -83,7 +83,7 @@ export default function ProjectModal({
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="project-modal-title"
-                className="w-full max-w-lg rounded-2xl border border-border bg-card text-card-foreground shadow-2xl"
+                className="w-full max-w-lg rounded-2xl border border-border bg-card text-left text-card-foreground shadow-2xl"
             >
                 <div className="flex items-center justify-between border-b border-border px-6 py-5">
                     <div>

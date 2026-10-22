@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // The public landing remains available to everyone, even when signed in or banned.
-  if (pathname !== "/" && pathname !== "/banned" && sessionCookie) {
+  if (pathname !== "/banned" && sessionCookie) {
     const apiUrl = process.env.API_URL;
     if (apiUrl) {
       try {
@@ -22,12 +22,15 @@ export async function middleware(request: NextRequest) {
         });
         if (response.ok) {
           const user = await response.json();
-          if (pathname.startsWith("/admin") && user.role !== "admin") {
+          if (pathname !== "/" && pathname.startsWith("/admin") && user.role !== "admin") {
             return NextResponse.redirect(new URL("/dashboard", request.url));
+          }
+          if (user.isDeactivated) {
+            return NextResponse.redirect(new URL("/banned?disabled=1", request.url));
           }
           const bannedUntil = user.bannedUntil ? new Date(user.bannedUntil) : null;
           const isBanActive = user.isBanned && (!bannedUntil || bannedUntil.getTime() > Date.now());
-          if (isBanActive) {
+          if (pathname !== "/" && isBanActive) {
             const banUrl = new URL("/banned", request.url);
             if (bannedUntil) banUrl.searchParams.set("until", bannedUntil.toISOString());
             return NextResponse.redirect(banUrl);

@@ -4,9 +4,9 @@ import { BannedSignOut } from "./sign-out";
 export default async function BannedPage({
   searchParams,
 }: {
-  searchParams: Promise<{ until?: string }>;
+  searchParams: Promise<{ until?: string; disabled?: string }>;
 }) {
-  const { until } = await searchParams;
+  const { until, disabled: isDeactivated } = await searchParams;
   const expiration = until ? new Date(until) : null;
   const isTemporary = expiration && !Number.isNaN(expiration.getTime());
 
@@ -16,8 +16,8 @@ export default async function BannedPage({
         <div className="mx-auto grid size-14 place-items-center rounded-2xl bg-red-500/10 text-red-400">
           <Ban size={25} />
         </div>
-        <p className="mt-6 text-xs font-semibold uppercase tracking-[0.16em] text-red-300">Acesso suspenso</p>
-        <h1 className="mt-2 text-2xl font-semibold tracking-tight">{isTemporary ? "Sua conta está temporariamente suspensa" : "Sua conta foi suspensa permanentemente"}</h1>
+        <p className="mt-6 text-xs font-semibold uppercase tracking-[0.16em] text-red-300">{isDeactivated === "1" ? "Conta desativada" : "Acesso suspenso"}</p>
+        <h1 className="mt-2 text-2xl font-semibold tracking-tight">{isDeactivated === "1" ? "Esta conta foi desativada" : isTemporary ? "Sua conta está temporariamente suspensa" : "Sua conta foi suspensa permanentemente"}</h1>
         <p className="mt-3 text-sm leading-6 text-slate-400">
           O acesso ao Propeller foi suspenso. Se você acredita que isso aconteceu por engano, entre em contato com o suporte.
         </p>

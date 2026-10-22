@@ -45,8 +45,10 @@ export class UsersService {
       bannedUntil: schema.user.bannedUntil,
       image: schema.user.image,
       createdAt: schema.user.createdAt,
+      deletedAt: schema.user.deletedAt,
     }).from(schema.user).where(eq(schema.user.id, id));
     if (!user) throw new NotFoundException('Usuário não encontrado');
-    return user;
+    const { deletedAt, ...profile } = user;
+    return { ...profile, isDeactivated: Boolean(deletedAt) };
   }
 }

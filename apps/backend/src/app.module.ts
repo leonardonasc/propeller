@@ -16,6 +16,7 @@ import { TasksModule } from './tasks/tasks.module.js';
 import { AdminModule } from './admin/admin.module.js';
 import { AccountBanGuard } from './auth/guards/account-ban.guard.js';
 import { CalendarModule } from './calendar/calendar.module.js';
+import { NotificationsModule } from './notifications/notifications.module.js';
 
 @Module({
   imports: [
@@ -85,6 +86,8 @@ import { CalendarModule } from './calendar/calendar.module.js';
     AdminModule,
 
     CalendarModule,
+
+    NotificationsModule,
   ],
 
   controllers: [],

@@ -1,5 +1,5 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { and, count, desc, eq, ilike, isNull, or } from 'drizzle-orm';
+import { and, count, desc, eq, ilike, or } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { DATABASE_CONNECTION } from '../database/database-connection.js';
 import * as schema from '../database/schema/index.js';
@@ -14,7 +14,7 @@ export class AdminService {
     const filter = search.trim()
       ? or(ilike(schema.user.name, `%${search.trim()}%`), ilike(schema.user.email, `%${search.trim()}%`))
       : undefined;
-    const activeFilter = filter ? and(filter, isNull(schema.user.deletedAt)) : isNull(schema.user.deletedAt);
+    const activeFilter = filter;
     const [users, [{ total }]] = await Promise.all([
       this.db.select({
         id: schema.user.id,
@@ -24,6 +24,7 @@ export class AdminService {
         plan: schema.user.plan,
         isBanned: schema.user.isBanned,
         bannedUntil: schema.user.bannedUntil,
+        deletedAt: schema.user.deletedAt,
         createdAt: schema.user.createdAt,
       }).from(schema.user).where(activeFilter).orderBy(desc(schema.user.createdAt)).limit(pageSize).offset(offset),
       this.db.select({ total: count() }).from(schema.user).where(activeFilter),
@@ -40,6 +41,7 @@ export class AdminService {
       plan: schema.user.plan,
       isBanned: schema.user.isBanned,
       bannedUntil: schema.user.bannedUntil,
+      deletedAt: schema.user.deletedAt,
       createdAt: schema.user.createdAt,
     }).from(schema.user).where(eq(schema.user.id, id));
     if (!user) throw new NotFoundException('Usuário não encontrado');
@@ -64,7 +66,7 @@ export class AdminService {
     if (dto.role !== undefined) updates.role = dto.role;
     if (dto.plan !== undefined) updates.plan = dto.plan;
     if (dto.isBanned !== undefined) updates.isBanned = dto.isBanned;
-    if (dto.isBanned === false) updates.bannedUntil = null;
+    if (dto.isBanned === false) { updates.bannedUntil = null; updates.deletedAt = null; }
     else if (dto.bannedUntil !== undefined) {
       if (dto.bannedUntil === null || dto.bannedUntil === '') updates.bannedUntil = null;
       else {
@@ -85,6 +87,7 @@ export class AdminService {
       plan: schema.user.plan,
       isBanned: schema.user.isBanned,
       bannedUntil: schema.user.bannedUntil,
+      deletedAt: schema.user.deletedAt,
       createdAt: schema.user.createdAt,
     });
     return updated;
@@ -94,9 +97,8 @@ export class AdminService {
     if (adminId === id) throw new BadRequestException('NÃ£o Ã© possÃ­vel excluir a prÃ³pria conta de administrador.');
     const [deleted] = await this.db.update(schema.user).set({
       deletedAt: new Date(), isBanned: true, updatedAt: new Date(),
-    }).where(and(eq(schema.user.id, id), isNull(schema.user.deletedAt))).returning({ id: schema.user.id });
+    }).where(eq(schema.user.id, id)).returning({ id: schema.user.id });
     if (!deleted) throw new NotFoundException('UsuÃ¡rio nÃ£o encontrado ou jÃ¡ excluÃ­do.');
-    await this.db.delete(schema.session).where(eq(schema.session.userId, id));
     return { success: true };
   }
 

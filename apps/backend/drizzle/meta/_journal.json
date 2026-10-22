@@ -120,6 +120,13 @@
       "when": 1792640232061,
       "tag": "0018_thin_the_fury",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1792647422480,
+      "tag": "0019_admin_notifications",
+      "breakpoints": true
     }
   ]
 }

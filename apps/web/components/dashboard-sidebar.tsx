@@ -17,12 +17,13 @@ import {
 } from "lucide-react";
 
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { authClient } from "../lib/auth-client";
 import Link from "next/link";
 import { ThemePicker } from "./theme-picker";
+import { API_BASE_PATH } from "../app/src/services/api";
 
 const navigationItems = [
   {
@@ -68,11 +69,25 @@ export function DashboardSidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [activeProjectCount, setActiveProjectCount] = useState<number | null>(null);
 
   const { data: session } = authClient.useSession();
   const userName = session?.user.name ?? "Meu perfil";
   const userPlan = session?.user.plan ?? "free";
   const isAdmin = session?.user.role === "admin";
+
+  useEffect(() => {
+    let cancelled = false;
+    const loadCount = () => {
+      fetch(`${API_BASE_PATH}/projects`, { credentials: "include", cache: "no-store" })
+        .then((response) => response.ok ? response.json() as Promise<unknown[]> : [])
+        .then((projects) => { if (!cancelled) setActiveProjectCount(projects.length); })
+        .catch(() => { if (!cancelled) setActiveProjectCount(null); });
+    };
+    loadCount();
+    window.addEventListener("propeller:projects-changed", loadCount);
+    return () => { cancelled = true; window.removeEventListener("propeller:projects-changed", loadCount); };
+  }, [pathname]);
 
   const handleLogout = async () => {
     if (isLoggingOut) return;
@@ -255,7 +270,7 @@ export function DashboardSidebar() {
               </strong>
 
               <span className="mt-0.5 block text-[10px] text-muted-foreground">
-                3 projetos ativos
+                {activeProjectCount === null ? "Projetos ativos" : `${activeProjectCount} ${activeProjectCount === 1 ? "projeto ativo" : "projetos ativos"}`}
               </span>
             </div>
           </div>

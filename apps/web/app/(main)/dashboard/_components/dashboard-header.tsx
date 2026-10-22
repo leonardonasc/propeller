@@ -16,7 +16,6 @@ export function DashboardHeader({ userName }: { userName: string }) {
       title={`${getDayGreeting()}, ${userName.split(" ")[0]} 👋`}
       description="Aqui está o resumo do seu workspace."
       actions={<ProjectCreateButton />}
-      showBack={false}
       icon={LayoutDashboard}
       className="mb-8"
     />

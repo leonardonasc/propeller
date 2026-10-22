@@ -7,6 +7,7 @@ import * as projectsSchema from "./schema/projects.js";
 import * as roadmapSchema from "./schema/roadmap.js";
 import * as tasksSchema from "./schema/tasks.js";
 import * as calendarSchema from "./schema/calendar.js";
+import * as notificationsSchema from "./schema/notifications.js";
 import { drizzle } from "drizzle-orm/node-postgres";
 
 @Module({
@@ -25,6 +26,7 @@ import { drizzle } from "drizzle-orm/node-postgres";
                         ...roadmapSchema,
                         ...tasksSchema,
                         ...calendarSchema,
+                        ...notificationsSchema,
                     }
                 });
             },

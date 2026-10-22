@@ -82,9 +82,16 @@ export default function TaskCard({ task, onEdit, isOverlay = false }: TaskCardPr
             )}
 
             {task.dueDate && (
-                <p className="mt-2 border-t border-border pt-2 text-xs leading-5 text-muted-foreground">
-                    Prazo (opcional){" "}
-
+                // validate if the date is before today, if so, show in red
+                <p
+                    className={`mt-2 text-xs leading-5 ${new Date(task.dueDate) < new Date() ? "text-red-500" : "text-muted-foreground"
+                        }`}
+                >
+                    {new Date(task.dueDate).toLocaleDateString("pt-BR", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                    })}
                 </p>
             )}
         </article>

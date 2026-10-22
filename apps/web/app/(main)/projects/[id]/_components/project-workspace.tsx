@@ -77,7 +77,7 @@ function TaskColumn({ column, children }: TaskColumnProps) {
     return (
         <section
             ref={setNodeRef}
-            className={`h-[420px] w-[min(85vw,360px)] shrink-0 flex min-h-0 min-w-0 flex-col rounded-xl border p-3 transition-colors md:h-[calc(100dvh-310px)] md:w-auto md:flex-1 ${isOver
+            className={`max-h-[420px] w-[min(85vw,360px)] shrink-0 flex min-h-0 min-w-0 flex-col rounded-xl border p-3 transition-colors md:max-h-[calc(100dvh-310px)] md:w-auto md:flex-1 ${isOver
                 ? "border-primary/70 bg-primary/10"
                 : "border-border bg-card"
                 }`}
@@ -357,7 +357,6 @@ export default function ProjectWorkspace({
     return (
         <div className="min-h-0 space-y-6 text-foreground">
             <PageHeader
-                backHref="/projects"
                 eyebrow="Projeto"
                 icon={FolderKanban}
                 title={currentProject.name}
@@ -408,7 +407,7 @@ export default function ProjectWorkspace({
                 onDragEnd={handleDragEnd}
                 onDragCancel={() => setActiveTaskId(null)}
             >
-                <div className="flex min-w-0 items-stretch gap-5 overflow-x-auto pb-2">
+                <div className="flex min-w-0 items-start gap-5 overflow-x-auto pb-2">
                     {columns.map((column) => {
                         const Icon = column.icon;
                         const columnTasks = tasks

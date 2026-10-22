@@ -12,6 +12,10 @@ const signUpSchema = z.object({
     name: z.string().min(1, { message: "O nome é obrigatório" }),
     email: z.string().email({ message: "Email inválido" }),
     password: z.string().min(8, { message: "A senha deve ter pelo menos 8 caracteres" }),
+    confirmPassword: z.string().min(1, { message: "Confirme sua senha" }),
+}).refine((values) => values.password === values.confirmPassword, {
+    message: "As senhas não coincidem",
+    path: ["confirmPassword"],
 });
 
 type SignUpSchema = z.infer<typeof signUpSchema>;
@@ -125,6 +129,12 @@ export function RegisterForm() {
                         {formState.errors.password.message}
                     </p>
                 )}
+            </div>
+
+            <div className="space-y-2">
+                <label htmlFor="register-confirm-password" className="text-sm font-medium text-slate-300">Confirmar senha</label>
+                <input id="register-confirm-password" type="password" autoComplete="new-password" placeholder="Repita sua senha" {...register("confirmPassword")} className="h-11 w-full rounded-lg border border-slate-800 bg-[#0d1424] px-3.5 text-sm text-white placeholder:text-slate-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10" required />
+                {formState.errors.confirmPassword && <p role="alert" className="text-xs text-red-400">{formState.errors.confirmPassword.message}</p>}
             </div>
 
             <button

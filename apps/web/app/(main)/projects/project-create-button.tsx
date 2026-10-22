@@ -16,6 +16,7 @@ export default function ProjectCreateButton({ disabled = false }: { disabled?: b
     async function handleSubmit(data: ProjectFormData) {
         try {
             await createProject(data)
+            window.dispatchEvent(new Event("propeller:projects-changed"))
             toast.success("Projeto criado com sucesso!")
             setIsOpen(false)
             router.push("/projects")
