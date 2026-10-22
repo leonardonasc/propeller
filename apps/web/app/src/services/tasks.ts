@@ -1,6 +1,7 @@
 // apps/web/app/src/services/tasks.ts
 
-import { CreateTaskInput, UpdateTaskInput, taskCommentSchema, type TaskComment } from "../schemas/tasks";
+import { taskCommentSchema } from "../schemas/tasks";
+import type { CreateTaskInput, TaskComment, UpdateTaskInput } from "../schemas/tasks";
 import { API_BASE_PATH } from "./api";
 
 export async function createTask(projectId: string, data: CreateTaskInput) {

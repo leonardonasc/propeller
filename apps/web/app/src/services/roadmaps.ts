@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
-import { CreateProjectInput, createProjectSchema, projectSchema, projectsSchema } from "../schemas/project";
-import { CreateRoadmapInput, createRoadmapSchema, roadmapsSchema } from "../schemas/roadmap";
+import { createRoadmapSchema, roadmapsSchema } from "../schemas/roadmap";
+import { projectSchema } from "../schemas/project";
+import type { CreateRoadmapInput } from "../schemas/roadmap";
 
 const api_url = process.env.API_URL;
 

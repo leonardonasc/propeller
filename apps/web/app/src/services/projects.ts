@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
-import { CreateProjectInput, createProjectSchema, projectSchema, projectsSchema } from "../schemas/project";
+import { createProjectSchema, projectSchema, projectsSchema } from "../schemas/project";
+import type { CreateProjectInput } from "../schemas/project";
 
 const api_url = process.env.API_URL;
 

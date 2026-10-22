@@ -31,6 +31,7 @@ export const projectSchema = z.object({
 
 export const projectsSchema = z.array(projectSchema);
 
+
 export type CreateProjectInput = z.infer<typeof createProjectSchema>;
 export type UpdateProjectInput = z.infer<typeof updateProjectSchema>;
 export type Project = z.infer<typeof projectSchema>;

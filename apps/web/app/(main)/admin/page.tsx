@@ -5,16 +5,7 @@ import { AlertTriangle, Bell, CheckCircle2, ChevronLeft, ChevronRight, Pencil, P
 import { PageHeader } from "../_components/page-header";
 import { toast } from "sonner";
 import { API_BASE_PATH } from "../../src/services/api";
-
-type UserRecord = {
-  id: string; name: string; email: string; role: "user" | "admin"; plan: "free" | "premium";
-  isBanned: boolean; bannedUntil: string | null; deletedAt: string | null; createdAt: string;
-};
-type ProjectRecord = { id: string; name: string; description: string | null; tasks: { id: string }[] };
-type UserDetails = UserRecord & { projects: ProjectRecord[] };
-type UserPage = { users: UserRecord[]; total: number; page: number; pageSize: number };
-type RoadmapRecord = { id: string; title: string; description: string | null; status: "planned" | "in_progress" | "completed"; category: "feature" | "improvement" | "bug"; position: number };
-type RoadmapDraft = Omit<RoadmapRecord, "id">;
+import type { RoadmapDraft, RoadmapRecord, UserDetails, UserPage, UserRecord } from "../../src/types";
 
 async function api<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE_PATH}${path}`, {

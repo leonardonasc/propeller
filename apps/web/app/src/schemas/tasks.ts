@@ -33,10 +33,11 @@ export const taskCommentSchema = z.object({
     createdAt: z.coerce.date(),
     author: z.object({ id: z.string(), name: z.string(), image: z.string().nullable() }).nullable().optional(),
 });
-export type TaskComment = z.infer<typeof taskCommentSchema>;
 
 export const tasksSchema = z.array(taskSchema);
 
+
+export type TaskComment = z.infer<typeof taskCommentSchema>;
 export type CreateTaskInput = z.infer<typeof createTaskSchema>;
 export type UpdateTaskInput = z.infer<typeof updateTaskSchema>;
 export type Task = z.infer<typeof taskSchema>;

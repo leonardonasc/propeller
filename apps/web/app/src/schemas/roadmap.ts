@@ -26,6 +26,7 @@ export const roadmapSchema = z.object({
 
 export const roadmapsSchema = z.array(roadmapSchema);
 
+
 export type CreateRoadmapInput = z.infer<typeof createRoadmapSchema>;
 export type UpdateRoadmapInput = z.infer<typeof updateRoadmapSchema>;
 export type Roadmap = z.infer<typeof roadmapSchema>;

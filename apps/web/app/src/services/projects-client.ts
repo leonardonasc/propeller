@@ -1,4 +1,5 @@
-import { createProjectSchema, projectSchema, type CreateProjectInput } from "../schemas/project";
+import { createProjectSchema, projectSchema } from "../schemas/project";
+import type { CreateProjectInput } from "../schemas/project";
 import { API_BASE_PATH } from "./api";
 
 export async function createProject(data: CreateProjectInput) {

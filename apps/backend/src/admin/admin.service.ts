@@ -94,18 +94,18 @@ export class AdminService {
   }
 
   async softDeleteUser(adminId: string, id: string) {
-    if (adminId === id) throw new BadRequestException('NÃ£o Ã© possÃ­vel excluir a prÃ³pria conta de administrador.');
+    if (adminId === id) throw new BadRequestException('Não é possível excluir a própria conta de administrador.');
     const [deleted] = await this.db.update(schema.user).set({
       deletedAt: new Date(), isBanned: true, updatedAt: new Date(),
     }).where(eq(schema.user.id, id)).returning({ id: schema.user.id });
-    if (!deleted) throw new NotFoundException('UsuÃ¡rio nÃ£o encontrado ou jÃ¡ excluÃ­do.');
+    if (!deleted) throw new NotFoundException('Usuário não encontrado ou já excluído.');
     return { success: true };
   }
 
   async permanentlyDeleteUser(adminId: string, id: string) {
-    if (adminId === id) throw new BadRequestException('NÃ£o Ã© possÃ­vel excluir a prÃ³pria conta de administrador.');
+    if (adminId === id) throw new BadRequestException('Não é possível excluir a própria conta de administrador.');
     const [deleted] = await this.db.delete(schema.user).where(eq(schema.user.id, id)).returning({ id: schema.user.id });
-    if (!deleted) throw new NotFoundException('UsuÃ¡rio nÃ£o encontrado.');
+    if (!deleted) throw new NotFoundException('Usuário não encontrado.');
     return { success: true };
   }
 }

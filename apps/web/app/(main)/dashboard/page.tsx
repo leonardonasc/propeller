@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { getProjects } from "../../src/services/projects";
 import { getUser } from "../../src/services/users";
 import type { Task } from "../../src/schemas/tasks";
+import type { DashboardTask } from "../../src/types";
 import { DashboardHeader } from "./_components/dashboard-header";
 
 const dateLabel = new Intl.DateTimeFormat("pt-BR", { day: "numeric", month: "short" });
@@ -50,8 +51,6 @@ export default async function DashboardPage() {
     </div>
   );
 }
-
-type DashboardTask = Task & { projectId: string; projectName: string };
 
 function SummaryCard({ label, value, detail, icon, href }: { label: string; value: string; detail: string; icon: React.ReactNode; href: string }) {
   return <Link href={href} className="group rounded-2xl border border-border bg-card p-5 transition hover:-translate-y-0.5 hover:border-primary/40"><div className="flex items-start justify-between"><div className="grid size-10 place-items-center rounded-xl bg-primary/10 text-primary">{icon}</div><span className="text-3xl font-semibold tracking-tight">{value}</span></div><p className="mt-5 text-sm font-medium">{label}</p><p className="mt-1 text-xs text-muted-foreground">{detail}</p></Link>;
